@@ -1,0 +1,40 @@
+---
+interface Props {
+  caption: string;
+  fullWidth?: boolean;
+}
+
+const { caption, fullWidth = false } = Astro.props;
+---
+
+<figure class:list={['figure', { 'full-width': fullWidth }]}>
+  <div class="figure-frame">
+    <slot />
+  </div>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+  .figure {
+    --flow-space: var(--space-xl);
+  }
+
+  .figure-frame {
+    overflow: hidden;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  .figure-frame > :global(img),
+  .figure-frame > :global(svg) {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  figcaption {
+    margin-block-start: var(--space-sm);
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+</style>

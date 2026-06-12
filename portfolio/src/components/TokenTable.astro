@@ -1,0 +1,121 @@
+---
+interface Token {
+  name: string;
+  value: string;
+  tier?: string;
+  usage: string;
+  swatch?: string;
+}
+
+interface Props {
+  caption: string;
+  tokens: Token[];
+}
+
+const { caption, tokens } = Astro.props;
+const hasTier = tokens.some((t) => t.tier);
+---
+
+<div class="token-table-wrap full-width" tabindex="0" role="region" aria-label={caption}>
+  <table class="token-table">
+    <caption>{caption}</caption>
+    <thead>
+      <tr>
+        <th scope="col">Token</th>
+        <th scope="col">Value</th>
+        {hasTier && <th scope="col">Tier</th>}
+        <th scope="col">Usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        tokens.map((token) => (
+          <tr>
+            <th scope="row">
+              <code>{token.name}</code>
+            </th>
+            <td>
+              <span class="value-cell">
+                {token.swatch && <span class="swatch" style={`--swatch: ${token.swatch}`} aria-hidden="true" />}
+                <code>{token.value}</code>
+              </span>
+            </td>
+            {hasTier && <td class="tier-cell">{token.tier}</td>}
+            <td class="usage-cell">{token.usage}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .token-table-wrap {
+    --flow-space: var(--space-xl);
+    overflow-x: auto;
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  .token-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  caption {
+    margin-block-end: var(--space-sm);
+    text-align: start;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  th,
+  td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: start;
+    vertical-align: top;
+    border-block-end: var(--border-hairline);
+  }
+
+  thead th {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border-block-end: 1px solid var(--color-border-strong);
+  }
+
+  tbody th {
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .value-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    white-space: nowrap;
+  }
+
+  .swatch {
+    inline-size: 1rem;
+    block-size: 1rem;
+    flex-shrink: 0;
+    background-color: var(--swatch);
+    border: var(--border-hairline);
+    border-radius: var(--radius-sm);
+  }
+
+  .tier-cell {
+    white-space: nowrap;
+    color: var(--color-text-muted);
+  }
+
+  .usage-cell {
+    min-width: 14rem;
+    color: var(--color-text-muted);
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import '../styles/prose.css';
+import BaseLayout from './BaseLayout.astro';
+import CaseStudyHero from '../components/CaseStudyHero.astro';
+import StatRow from '../components/StatRow.astro';
+import Pager from '../components/Pager.astro';
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+  prev?: CollectionEntry<'work'>;
+  next?: CollectionEntry<'work'>;
+}
+
+const { entry, prev, next } = Astro.props;
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.summary} type="article">
+  <article class="container case-study">
+    <CaseStudyHero {entry} />
+    <div class="at-a-glance" data-reveal>
+      <h2 class="visually-hidden">At a glance</h2>
+      <div data-reveal-item>
+        <StatRow stats={entry.data.stats} />
+      </div>
+    </div>
+    <div class="prose flow">
+      <slot />
+    </div>
+    <Pager {prev} {next} />
+  </article>
+</BaseLayout>
+
+<style>
+  .at-a-glance {
+    margin-block-start: var(--space-xl);
+  }
+
+  .case-study :global(.prose) {
+    margin-block-start: var(--space-2xl);
+  }
+</style>

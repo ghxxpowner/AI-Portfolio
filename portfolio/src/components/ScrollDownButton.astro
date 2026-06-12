@@ -1,0 +1,40 @@
+---
+interface Props {
+  href: string;
+  label?: string;
+}
+
+const { href, label = 'Scroll to next section' } = Astro.props;
+---
+
+<a class="scroll-down bounce" {href}>
+  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true">
+    <path
+      d="M8 2v12m0 0 5-5m-5 5L3 9"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+  <span class="visually-hidden">{label}</span>
+</a>
+
+<style>
+  .scroll-down {
+    display: grid;
+    place-items: center;
+    inline-size: 3.25rem;
+    block-size: 3.25rem;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .scroll-down:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+  }
+</style>

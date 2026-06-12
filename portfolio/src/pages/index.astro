@@ -1,0 +1,212 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PillButton from '../components/PillButton.astro';
+import ScrollDownButton from '../components/ScrollDownButton.astro';
+import GlowBlob from '../components/GlowBlob.astro';
+
+const featured = (await getCollection('work', ({ data }) => data.featured && !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const principles = [
+  {
+    title: 'Systems are products',
+    text: 'A design system has users, a roadmap and a support queue. I run it like a product, not a library of parts.',
+  },
+  {
+    title: 'Contracts over guidelines',
+    text: 'Rules that live in tokens, specs and CI survive. Rules that live in documents decay. I design for the first kind.',
+  },
+  {
+    title: 'Accessible by default',
+    text: 'Conformance is what falls out when nobody is thinking about it — so I build it into the defaults, not the review.',
+  },
+];
+---
+
+<BaseLayout
+  title="Daniel Klinke"
+  description="Product designer specializing in design systems — token architecture, multi-brand theming, governance and accessibility. Selected case studies."
+>
+  <section class="hero container" data-reveal>
+    <GlowBlob size="44rem" top="-22rem" right="-14rem" />
+    <GlowBlob size="36rem" bottom="-20rem" left="-16rem" />
+    <h1 class="display" data-split="chars">Design systems that teams adopt</h1>
+    <div data-split="lines">
+      <p class="hero-sub">
+        I'm Daniel Klinke, product designer. I design token architectures, multi-brand component
+        libraries and the governance that keeps them alive — for products with many teams and no
+        patience for friction.
+      </p>
+      <p class="hero-meta">Based in Germany · Working with teams worldwide</p>
+    </div>
+    <div class="hero-actions" data-reveal-item style="--index: 4">
+      <ScrollDownButton href="#featured" label="Scroll to selected work" />
+    </div>
+  </section>
+
+  <section class="container work-section" id="featured" aria-labelledby="featured-heading" data-reveal>
+    <div class="section-head" data-reveal-item style="--index: 0">
+      <h2 id="featured-heading" class="display section-title">Work</h2>
+      <p class="section-sub">Systems, not screens.</p>
+      <p class="section-note">
+        Token architectures, multi-brand libraries and the governance that keeps them alive —
+        written up with the decisions, trade-offs and numbers.
+      </p>
+    </div>
+    <div class="work-grid">
+      {
+        featured.map((entry, i) => (
+          <div class:list={[{ 'grid-featured': i === 0 }]} data-reveal-item style={`--index: ${i + 1}`}>
+            <ProjectCard {entry} featured={i === 0} />
+          </div>
+        ))
+      }
+    </div>
+    <div class="work-more" data-reveal-item style={`--index: ${featured.length + 1}`}>
+      <PillButton href="/work/" variant="ghost">All case studies</PillButton>
+    </div>
+  </section>
+
+  <section class="container principles-section" aria-labelledby="principles-heading" data-reveal>
+    <h2 id="principles-heading" class="display section-title" data-reveal-item style="--index: 0">
+      How I work
+    </h2>
+    <ul role="list" class="principles">
+      {
+        principles.map((p, i) => (
+          <li class="principle" data-reveal-item style={`--index: ${i + 1}`}>
+            <p class="principle-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+            <h3>{p.title}</h3>
+            <p class="principle-text">{p.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    gap: var(--space-xl);
+    padding-block: var(--space-6xl) var(--space-4xl);
+    overflow: visible;
+  }
+
+  h1 {
+    max-width: 10ch;
+    font-size: var(--text-display);
+  }
+
+  .hero-sub {
+    max-width: 52ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .hero-meta {
+    margin-block-start: var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .work-section,
+  .principles-section {
+    padding-block-start: var(--space-6xl);
+  }
+
+  .work-section .section-head {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-md);
+    margin-block-end: var(--space-2xl);
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: var(--text-5xl);
+  }
+
+  .section-sub {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+
+  .section-note {
+    max-width: 52ch;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+
+  .work-grid {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 48rem) {
+    .work-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-featured {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .work-more {
+    display: flex;
+    justify-content: center;
+    margin-block-start: var(--space-xl);
+  }
+
+  .principles {
+    display: grid;
+    gap: var(--space-lg);
+    margin-block-start: var(--space-2xl);
+  }
+
+  @media (min-width: 48rem) {
+    .principles {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .principle {
+    display: grid;
+    align-content: start;
+    gap: var(--space-sm);
+    padding: var(--space-xl);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-2xl);
+  }
+
+  .principle-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+    inline-size: fit-content;
+    padding: var(--space-2xs) var(--space-sm);
+    border-radius: var(--radius-full);
+  }
+
+  .principle h3 {
+    margin-block-start: var(--space-sm);
+    font-size: var(--text-xl);
+  }
+
+  .principle-text {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+</style>

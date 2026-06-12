@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import GlowBlob from '../../components/GlowBlob.astro';
+
+const entries = (await getCollection('work', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout
+  title="Work"
+  description="Design-system case studies: multi-brand theming, token architecture migration, component governance and an accessibility uplift to WCAG 2.2 AA."
+>
+  <div class="container">
+    <header class="page-head" data-reveal>
+      <GlowBlob size="36rem" top="-18rem" right="-12rem" />
+      <h1 class="display" data-split="chars">Work</h1>
+      <div data-split="lines">
+        <p class="page-sub">
+          Four design-system engagements, written up the way I ran them — including the decisions,
+          the trade-offs and the numbers.
+        </p>
+      </div>
+    </header>
+    <div class="work-list" data-reveal>
+      {
+        entries.map((entry, i) => (
+          <div data-reveal-item style={`--index: ${i}`}>
+            <ProjectCard {entry} headingLevel="h2" />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    position: relative;
+    display: grid;
+    gap: var(--space-lg);
+    padding-block: var(--space-4xl) var(--space-3xl);
+  }
+
+  h1 {
+    font-size: var(--text-display);
+  }
+
+  .page-sub {
+    max-width: 52ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .work-list {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 48rem) {
+    .work-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,132 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navItems = [
+  { label: 'Work', href: '/work/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Styleguide', href: '/styleguide/' },
+];
+
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(`${href}`);
+---
+
+<header class="site-header">
+  <div class="header-pill">
+    <a class="wordmark" href="/">
+      <span class="wordmark-spark" aria-hidden="true"></span>
+      <span class="wordmark-text">Daniel Klinke</span>
+    </a>
+    <nav aria-label="Main">
+      <ul role="list" class="nav-list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                class:list={['nav-link', { 'is-active': isCurrent(item.href) }]}
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: var(--space-sm);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    padding-inline: var(--space-sm);
+  }
+
+  .header-pill {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    max-width: 100%;
+    padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-md);
+    background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--border-hairline);
+    border-radius: var(--radius-full);
+    box-shadow: 0 8px 28px rgb(0 0 0 / 0.07);
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .wordmark-spark {
+    inline-size: 0.65em;
+    block-size: 0.65em;
+    flex-shrink: 0;
+    background-color: var(--color-accent);
+    border-radius: 2px;
+    rotate: 45deg;
+    transition: rotate var(--duration-slow) var(--ease-out-cubic);
+  }
+
+  .wordmark:hover .wordmark-spark {
+    rotate: 225deg;
+  }
+
+  .nav-list {
+    display: flex;
+    gap: var(--space-2xs);
+  }
+
+  .nav-link {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-sm);
+    font-weight: 550;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-full);
+    transition:
+      color var(--duration-quick) var(--ease-out-cubic),
+      background-color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+    background-color: var(--color-bg-subtle);
+  }
+
+  .nav-link.is-active {
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+  }
+
+  @media (max-width: 28rem) {
+    .header-pill {
+      gap: var(--space-sm);
+    }
+
+    .wordmark-text {
+      display: none;
+    }
+
+    .wordmark-spark {
+      inline-size: 1rem;
+      block-size: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -f /tmp/og-source.svg.png /tmp/og-cropped.png)",
+      "Bash(npx astro *)",
+      "Bash(npm i *)",
+      "Read(//private/tmp/**)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --screenshot=/tmp/shot-home.png --window-size=1280,2400 --hide-scrollbars http://localhost:4322/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --screenshot=/tmp/shot-cs-top.png --window-size=1280,2200 --hide-scrollbars http://localhost:4322/work/multi-brand-design-system/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --force-prefers-color-scheme=light --screenshot=/tmp/shot-home-light.png --window-size=1280,2400 --hide-scrollbars http://localhost:4322/)",
+      "Bash(sips -g pixelWidth /tmp/shot-home-light.png)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --screenshot=/tmp/shot-home-light.png --window-size=1280,2400 --hide-scrollbars http://localhost:4333/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --screenshot=/tmp/shot-cs-light.png --window-size=1280,3000 --hide-scrollbars http://localhost:4333/work/token-architecture-migration/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --screenshot=/tmp/shot-mobile.png --window-size=320,1600 --hide-scrollbars http://localhost:4333/work/multi-brand-design-system/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --screenshot=/tmp/shot-cs-full.png --window-size=1280,8200 --hide-scrollbars http://localhost:4333/work/multi-brand-design-system/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --screenshot=/tmp/shot-about.png --window-size=1280,2600 --hide-scrollbars http://localhost:4333/about/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --screenshot=/tmp/shot-mobile3.png --window-size=320,1600 --hide-scrollbars http://localhost:4333/work/multi-brand-design-system/)",
+      "Bash(sips -g pixelWidth /tmp/shot-mobile3.png)",
+      "Bash(/Applications/Firefox.app/Contents/MacOS/firefox --headless --screenshot /tmp/shot-ff320.png --window-size=320,1600 http://localhost:4333/work/multi-brand-design-system/)",
+      "Bash(sips -g pixelWidth /tmp/shot-ff320.png)",
+      "Bash(pkill -f \"astro preview\")",
+      "Bash(pkill -f \"http.server 4333\")",
+      "Bash(rm -rf /tmp/dist-light /tmp/shot-*.png /tmp/og-source.svg.png /tmp/preview.log)",
+      "Bash(npm remove *)"
+    ]
+  }
+}

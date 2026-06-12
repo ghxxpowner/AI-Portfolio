@@ -1,0 +1,135 @@
+---
+title: 'One system, twelve brands'
+summary: 'A multi-brand design system for a European retail group — one component library serving twelve store brands through a theming layer, with no forks and no lowest-common-denominator UI.'
+client: 'Retail group, EU'
+year: '2025'
+role: 'Lead product designer'
+team: '2 designers, 4 engineers, 1 PM'
+timeline: '9 months'
+platform: 'Web & native apps'
+discipline: ['Design systems', 'Design tokens', 'Multi-brand theming']
+artwork: 'multi-brand'
+featured: true
+order: 1
+stats:
+  - value: '12'
+    label: 'brands on one component library'
+  - value: '−38%'
+    label: 'UI defects flagged in design QA'
+  - value: '3 days'
+    label: 'to onboard a new brand, down from 6 weeks'
+  - value: '96'
+    label: 'semantic tokens covering every themed decision'
+---
+
+import TokenTable from '../../components/TokenTable.astro';
+import ComponentAnatomy from '../../components/ComponentAnatomy.astro';
+import BeforeAfter from '../../components/BeforeAfter.astro';
+import Callout from '../../components/Callout.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import StatRow from '../../components/StatRow.astro';
+
+## Context
+
+The group operates twelve retail brands across seven countries — from a discount grocery chain to a premium home goods label. Each brand ran its own web shop and app on its own front-end codebase, with its own button, its own checkout, and its own bugs. Twelve teams were solving the same interface problems twelve times, and a change as small as a new payment badge took a quarter to roll out everywhere.
+
+Leadership approved a shared platform. My brief: design the system that would let one component library carry twelve visual identities — without flattening them into one beige average.
+
+## Problem
+
+The naive version of "shared components" had been tried before, and brand teams rejected it for a good reason: it made every brand look the same. The premium label's marketing director put it bluntly — if their product card looks like the discounter's product card, the system has failed commercially, not just aesthetically.
+
+So the real design problem was architectural: **which decisions belong to the system, and which belong to the brand?** Spacing, accessibility behavior, and interaction patterns had to be invariant. Color, type, shape, and density had to flex per brand — predictably, not through CSS overrides scattered across twelve codebases.
+
+## My role
+
+I led design on the system end to end: the token architecture, the component specification work, the Figma library structure, and the brand onboarding playbook. I paired weekly with the platform engineering lead on the theming pipeline, and ran the review sessions where brand designers contested — and improved — the flex points. The component build itself was engineering's; every API decision was made together.
+
+## Process
+
+### A theming contract, not a theme
+
+We started by auditing all twelve UIs and tagging every visual decision as *invariant* or *brand-flexible*. The output was a theming contract: 96 semantic tokens that a brand must define, and nothing else. If a brand needed to change something the contract didn't expose, that was a system conversation, not an override.
+
+<TokenTable
+  caption="An excerpt from the theming contract — the semantic layer each brand defines. Values shown are the premium home goods brand."
+  tokens={[
+    { name: '--brand-action-bg', value: '#2f3a30', swatch: '#2f3a30', tier: 'Semantic', usage: 'Primary action surfaces: buy buttons, checkout CTAs' },
+    { name: '--brand-action-label', value: '#f7f5f0', swatch: '#f7f5f0', tier: 'Semantic', usage: 'Text and icons on primary actions' },
+    { name: '--brand-surface-card', value: '#ffffff', swatch: '#ffffff', tier: 'Semantic', usage: 'Product cards, sheets, dialogs' },
+    { name: '--brand-radius-control', value: '2px', tier: 'Semantic', usage: 'Corner radius for buttons and inputs — the premium brand is sharp, the grocer is round' },
+    { name: '--brand-font-display', value: 'Canela', tier: 'Semantic', usage: 'Headlines and prices; loaded per brand, metrics-matched fallback required' },
+    { name: '--brand-density', value: '1.0', tier: 'Semantic', usage: 'Multiplier on the spacing scale — discount brands run at 0.85 for denser shelves' },
+  ]}
+/>
+
+### Components specced against the contract
+
+Every component was specified twice: once as behavior (states, keyboard interaction, content rules — identical everywhere) and once as themed anatomy (which parts consume which contract tokens). The spec format made review fast, because a brand designer could see exactly which knobs they owned.
+
+<ComponentAnatomy
+  title="Themed anatomy — primary button"
+  labels={[
+    { title: 'Container', note: 'fill from --brand-action-bg, radius from --brand-radius-control; minimum target size is invariant (44px)' },
+    { title: 'Leading icon', note: 'optional slot; stroke inherits label color, size is invariant' },
+    { title: 'Label', note: 'color from --brand-action-label, face from --brand-font-ui; casing is a brand decision, truncation behavior is not' },
+    { title: 'Focus ring', note: 'invariant: 2px, offset, system-owned color with guaranteed 3:1 contrast on every brand background' },
+  ]}
+/>
+
+### Proving it with the two extremes
+
+Rather than rolling out brand by brand, we themed the two most distant brands first — the discount grocer and the premium label — and rebuilt one real flow (product page to checkout) for both from the same components. Every place the result looked wrong became a contract change. Three rounds of this hardened the token set before the other ten brands touched it.
+
+<BeforeAfter
+  beforeLabel="Before — twelve codebases"
+  afterLabel="After — one library, themed"
+  caption="The same product-card slot, before and after. Identical structure and behavior; brand identity carried entirely by the theming contract."
+>
+  <svg slot="before" viewBox="0 0 400 225" aria-hidden="true">
+    <rect x="32" y="36" width="100" height="120" rx="4" fill="var(--color-surface)" stroke="var(--color-border-strong)" />
+    <rect x="150" y="28" width="100" height="136" rx="18" fill="var(--color-surface)" stroke="var(--color-border-strong)" />
+    <rect x="268" y="44" width="100" height="104" rx="10" fill="var(--color-surface)" stroke="var(--color-border-strong)" />
+    <rect x="44" y="118" width="60" height="20" rx="3" fill="var(--color-text-muted)" />
+    <rect x="162" y="126" width="76" height="22" rx="11" fill="var(--color-text-muted)" />
+    <rect x="280" y="112" width="52" height="18" rx="5" fill="var(--color-text-muted)" />
+  </svg>
+  <svg slot="after" viewBox="0 0 400 225" aria-hidden="true">
+    <rect x="32" y="36" width="100" height="120" rx="2" fill="var(--color-surface)" stroke="var(--color-border-strong)" />
+    <rect x="150" y="36" width="100" height="120" rx="10" fill="var(--color-surface)" stroke="var(--color-border-strong)" />
+    <rect x="268" y="36" width="100" height="120" rx="16" fill="var(--color-surface)" stroke="var(--color-border-strong)" />
+    <rect x="44" y="118" width="76" height="22" rx="2" fill="#2f3a30" />
+    <rect x="162" y="118" width="76" height="22" rx="8" fill="var(--color-accent)" />
+    <rect x="280" y="118" width="76" height="22" rx="11" fill="#b3674f" />
+  </svg>
+</BeforeAfter>
+
+## Decisions & trade-offs
+
+<Callout label="Decision">
+  We exposed **density** as a single multiplier token instead of letting brands set individual spacings. The discount brands wanted tighter shelves; giving them one dial (0.85–1.1) kept layouts coherent and made the QA matrix tractable. Per-property spacing overrides were the most requested feature we said no to.
+</Callout>
+
+<Callout label="Trade-off">
+  Focus indicators are **system-owned and not themeable**. Two brands objected on aesthetic grounds. We held the line: a focus ring that can be themed can be themed to invisible, and accessibility regressions were the one failure mode the contract had to make impossible. The compromise was offering two system-approved ring styles.
+</Callout>
+
+## Outcomes
+
+Twelve brands shipped on the shared library within the program year. The number a CFO cares about: brand onboarding fell from six weeks of front-end work to three days of token definition and review. The number I care about: design QA defects on themed surfaces dropped 38%, because divergence now has to be declared in a contract instead of leaking in through overrides.
+
+<StatRow
+  stats={[
+    { value: '7', label: 'countries live on the shared checkout flow' },
+    { value: '0', label: 'component forks after twelve months' },
+    { value: '100%', label: 'of themed surfaces pass WCAG contrast on every brand' },
+  ]}
+/>
+
+<PullQuote attribution="Engineering lead, platform team">
+  <p>The contract changed the conversation. Brand teams stopped asking us to make exceptions and started asking which token does this — that's the system working.</p>
+</PullQuote>
+
+## Reflection
+
+I would introduce the brand-designer review council in month one instead of month four. The contract got dramatically better once the people it constrained were the people negotiating it — we spent the first quarter designing for brands instead of with them, and rework from that period was avoidable.

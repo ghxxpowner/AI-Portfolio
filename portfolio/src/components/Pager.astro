@@ -1,0 +1,129 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  prev?: CollectionEntry<'work'>;
+  next?: CollectionEntry<'work'>;
+}
+
+const { prev, next } = Astro.props;
+---
+
+<nav class="pager" aria-label="Case studies">
+  {
+    prev ? (
+      <a class="pager-link" href={`/work/${prev.id}/`} rel="prev">
+        <span class="pager-chip" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+            <path
+              d="M14 8H2m0 0 5-5M2 8l5 5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <span class="pager-text">
+          <span class="eyebrow">Previous case study</span>
+          <span class="pager-title">{prev.data.title}</span>
+        </span>
+      </a>
+    ) : (
+      <span />
+    )
+  }
+  {
+    next && (
+      <a class="pager-link pager-next" href={`/work/${next.id}/`} rel="next">
+        <span class="pager-text">
+          <span class="eyebrow">Next case study</span>
+          <span class="pager-title">{next.data.title}</span>
+        </span>
+        <span class="pager-chip" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+            <path
+              d="M2 8h12m0 0L9 3m5 5-5 5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </a>
+    )
+  }
+</nav>
+
+<style>
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-block-start: var(--space-4xl);
+  }
+
+  @media (max-width: 40rem) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pager-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+    text-decoration: none;
+    transition: translate var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .pager-link:hover {
+    translate: 0 -3px;
+  }
+
+  .pager-next {
+    justify-content: flex-end;
+    text-align: end;
+  }
+
+  @media (max-width: 40rem) {
+    .pager-next {
+      justify-content: flex-start;
+      text-align: start;
+    }
+  }
+
+  .pager-chip {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .pager-link:hover .pager-chip {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .pager-text {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .pager-title {
+    font-size: var(--text-lg);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+  }
+</style>

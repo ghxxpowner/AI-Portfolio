@@ -1,0 +1,105 @@
+---
+import Marquee from './Marquee.astro';
+import PillButton from './PillButton.astro';
+
+const year = new Date().getFullYear();
+const topics = ['Design systems', 'Token architecture', 'Multi-brand theming', 'Governance', 'Accessibility'];
+---
+
+<footer class="site-footer">
+  <Marquee items={topics} inverse />
+  <div class="container">
+    <div class="cta" data-reveal>
+      <p class="eyebrow cta-eyebrow" data-reveal-item style="--index: 0">Contact</p>
+      <p class="display cta-line" data-reveal-item style="--index: 1">Let's build a system that sticks.</p>
+      <div class="cta-actions" data-reveal-item style="--index: 2">
+        <PillButton href="mailto:hello@danielklinke.design">hello@danielklinke.design</PillButton>
+        <PillButton href="https://www.linkedin.com/in/danielklinke" variant="ghost">LinkedIn</PillButton>
+      </div>
+    </div>
+    <div class="meta">
+      <p class="colophon">© {year} Daniel Klinke</p>
+      <p class="colophon">
+        Hand-built with Astro, one font and a token system · <a href="/styleguide/">See how it's made</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-block-start: var(--space-6xl);
+    background-color: var(--color-inverse-bg);
+    color: var(--color-inverse-text);
+  }
+
+  .cta {
+    display: grid;
+    gap: var(--space-lg);
+    padding-block: var(--space-4xl);
+  }
+
+  .cta-eyebrow {
+    color: var(--color-accent);
+  }
+
+  .cta-line {
+    max-width: 14ch;
+    font-size: var(--text-5xl);
+    text-wrap: balance;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-sm);
+  }
+
+  /* Ghost pill needs inverse colors inside the dark footer */
+  .cta-actions :global(.pill-ghost) {
+    color: var(--color-inverse-text);
+    border-color: var(--color-inverse-border);
+  }
+
+  .cta-actions :global(.pill-ghost:hover) {
+    color: var(--color-on-accent);
+    border-color: var(--color-accent);
+  }
+
+  .cta-actions :global(.pill-neon:hover) {
+    background-color: var(--color-inverse-text);
+    color: var(--color-inverse-bg);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-block: var(--space-lg);
+    border-block-start: 1px solid var(--color-inverse-border);
+  }
+
+  .colophon {
+    font-size: var(--text-xs);
+    color: var(--color-inverse-text-muted);
+  }
+
+  .colophon a {
+    color: inherit;
+  }
+
+  .colophon a:hover {
+    color: var(--color-inverse-text);
+  }
+
+  :global(html[data-theme='dark']) .site-footer,
+  .site-footer {
+    --color-focus-ring-local: var(--color-accent);
+  }
+
+  .site-footer :global(:focus-visible) {
+    outline-color: var(--color-accent);
+  }
+</style>

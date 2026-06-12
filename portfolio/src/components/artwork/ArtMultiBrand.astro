@@ -1,0 +1,35 @@
+---
+// Same component, six brands: one button tile per brand hue.
+// Brand hues are intentionally literal — they represent brand colors,
+// not UI colors, so they don't re-theme.
+const brands = ['#b3674f', '#b99b35', 'var(--color-accent)', '#8e6a8e', '#5e7b99', '#7a8b5c'];
+---
+
+<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  {
+    brands.map((hue, i) => {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+      const x = 56 + col * 240;
+      const y = 52 + row * 184;
+      return (
+        <g>
+          <rect
+            x={x}
+            y={y}
+            width="208"
+            height="152"
+            rx="14"
+            fill="var(--color-surface)"
+            stroke="var(--color-border)"
+          />
+          <rect x={x + 24} y={y + 28} width="104" height="12" rx="6" fill="var(--color-text-muted)" opacity="0.85" />
+          <rect x={x + 24} y={y + 52} width="148" height="8" rx="4" fill="var(--color-border-strong)" />
+          <rect x={x + 24} y={y + 68} width="120" height="8" rx="4" fill="var(--color-border-strong)" />
+          <rect x={x + 24} y={y + 96} width="88" height="30" rx="8" fill={hue} />
+          <rect x={x + 40} y={y + 107} width="56" height="8" rx="4" fill="var(--color-bg)" />
+        </g>
+      );
+    })
+  }
+</svg>

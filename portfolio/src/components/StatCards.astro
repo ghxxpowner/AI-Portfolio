@@ -1,0 +1,103 @@
+---
+interface Stat {
+  value: string;
+  label: string;
+  variant?: 'surface' | 'gradient' | 'ink' | 'neon';
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<ul role="list" class="stat-cards">
+  {
+    stats.map((stat, i) => (
+      <li
+        class:list={['stat-card', `stat-card-${stat.variant ?? 'surface'}`]}
+        data-reveal-item
+        style={`--index: ${i}`}
+      >
+        <span class="stat-card-value">{stat.value}</span>
+        <span class="stat-card-label">{stat.label}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .stat-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 56rem) {
+    .stat-cards {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-2xl);
+    padding: var(--space-lg);
+    border-radius: var(--radius-2xl);
+    aspect-ratio: 1 / 1.04;
+  }
+
+  @media (max-width: 36rem) {
+    .stat-card {
+      aspect-ratio: auto;
+      min-block-size: 11rem;
+    }
+  }
+
+  .stat-card-value {
+    font-size: var(--text-5xl);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: var(--tracking-display);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-card-label {
+    max-width: 16ch;
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    text-wrap: balance;
+  }
+
+  /* Variants — one card per surface treatment, all theme-aware */
+
+  .stat-card-surface {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .stat-card-gradient {
+    background: linear-gradient(150deg, var(--color-surface) 18%, var(--color-accent) 95%);
+    color: var(--color-text);
+  }
+
+  .stat-card-gradient .stat-card-label {
+    color: var(--color-on-accent);
+  }
+
+  .stat-card-ink {
+    background-color: var(--color-inverse-bg);
+    color: var(--color-inverse-text);
+    /* Keeps the ink card distinct from surface cards in dark mode,
+       where both backgrounds sit close together */
+    border: 1px solid var(--color-inverse-border);
+  }
+
+  .stat-card-neon {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+</style>

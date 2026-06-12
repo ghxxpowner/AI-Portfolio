@@ -1,0 +1,47 @@
+---
+import ArtMultiBrand from './ArtMultiBrand.astro';
+import ArtTokens from './ArtTokens.astro';
+import ArtGovernance from './ArtGovernance.astro';
+import ArtA11y from './ArtA11y.astro';
+
+interface Props {
+  artwork: 'multi-brand' | 'tokens' | 'governance' | 'a11y';
+  frameless?: boolean;
+}
+
+const { artwork, frameless = false } = Astro.props;
+
+const artworks = {
+  'multi-brand': ArtMultiBrand,
+  tokens: ArtTokens,
+  governance: ArtGovernance,
+  a11y: ArtA11y,
+};
+
+const Art = artworks[artwork];
+---
+
+<div class:list={['artwork', { framed: !frameless }]}>
+  <Art />
+</div>
+
+<style>
+  .artwork {
+    overflow: hidden;
+    background-color: var(--color-bg-subtle);
+    /* Frameless mode fills its container (cards control the aspect) */
+    block-size: 100%;
+  }
+
+  .artwork.framed {
+    aspect-ratio: 16 / 9;
+    block-size: auto;
+    border: var(--border-hairline);
+    border-radius: var(--radius-2xl);
+  }
+
+  .artwork :global(svg) {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+</style>

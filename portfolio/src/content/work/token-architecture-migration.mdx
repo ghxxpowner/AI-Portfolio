@@ -1,0 +1,93 @@
+---
+title: 'From style guide to token architecture'
+summary: 'Migrating a fintech platform from a static style guide and 641 hard-coded values to a three-tier token architecture — shipped incrementally, with zero unplanned visual regressions.'
+client: 'B2B fintech, SaaS'
+year: '2024'
+role: 'Senior product designer'
+team: '1 designer, 3 engineers'
+timeline: '5 months'
+platform: 'Web platform, 4 products'
+discipline: ['Design tokens', 'Migration', 'Tooling']
+artwork: 'tokens'
+featured: true
+order: 2
+stats:
+  - value: '641'
+    label: 'hard-coded color and spacing values replaced'
+  - value: '58'
+    label: 'semantic tokens in the final architecture'
+  - value: '0'
+    label: 'unplanned visual regressions in production'
+  - value: '6 weeks'
+    label: 'from token release to dark mode shipping — the payoff'
+---
+
+import TokenTable from '../../components/TokenTable.astro';
+import Callout from '../../components/Callout.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import StatRow from '../../components/StatRow.astro';
+
+## Context
+
+The platform had a respected style guide — a PDF and a Figma file — and four product teams who each translated it into code their own way. An audit script we wrote in week one found 641 distinct hard-coded color and spacing values across the codebases, including 14 different grays that were all "officially" the same gray. A dark mode initiative had just been scoped at two quarters of effort, which was the moment leadership became receptive to fixing the foundation instead.
+
+## Problem
+
+The style guide documented *values*. It said nothing about *roles* — which gray is a border, which is disabled text, which is a divider. Without roles, every new screen was an act of interpretation, and every redesign meant find-and-replace archaeology. The goal was an architecture where changing a decision changes one token, and where dark mode is a remap, not a rewrite.
+
+## My role
+
+I designed the token architecture and naming system, ran the audit and mapping workshops, and wrote the migration playbook each product team followed. The engineering pair built the audit tooling and the codemods; I owned what every token meant, what it was named, and what was allowed to reference what.
+
+## Process
+
+### Three tiers, strict references
+
+The architecture is deliberately boring: primitives hold raw values, semantic tokens give them roles, component tokens exist only where a component genuinely needs an exception. The rule that makes it work is referential discipline — components consume semantic tokens only, and a lint rule enforces it in CI.
+
+<TokenTable
+  caption="The reference chain for one decision — disabled text — across all three tiers."
+  tokens={[
+    { name: 'gray.500', value: '#717068', swatch: '#717068', tier: '1 · Primitive', usage: 'Raw value. Never used in product code; referenced by semantic tokens only' },
+    { name: 'text.disabled', value: '{gray.500}', swatch: '#717068', tier: '2 · Semantic', usage: 'The role. This is what components consume — and what dark mode remaps' },
+    { name: 'input.label.disabled', value: '{text.disabled}', tier: '3 · Component', usage: 'Exists only because inputs needed a documented exception during migration; scheduled for removal' },
+  ]}
+/>
+
+### Mapping 641 values to 58 roles
+
+The audit output was a spreadsheet of every hard-coded value, its usage count, and a screenshot of where it appeared. In four mapping workshops — one per product team — we assigned each cluster to a semantic role, flagged true one-offs, and recorded every "wait, why is this different?" as either a bug or a deliberate exception. 641 values collapsed into 58 semantic tokens and a short, honest exceptions list.
+
+### Migration as a sequence of invisible releases
+
+Each product area migrated in two sprints: codemod the mechanical 80%, hand-review the rest against visual regression snapshots. Every release was meant to be visually identical — the snapshot diff was the acceptance test. The migration earned trust precisely because nobody noticed it happening.
+
+## Decisions & trade-offs
+
+<Callout label="Decision">
+  Token names describe **roles, not appearance**: `text.disabled`, not `gray.500-text`. Names held stable through two rebrand discussions precisely because they promise nothing about what the value looks like. This was contentious — appearance names feel intuitive in Figma — but role names are what made dark mode a six-week project.
+</Callout>
+
+<Callout label="Trade-off">
+  We allowed a **component-token tier** even though most tokens never need it, because banning it pushed teams back toward hard-coded exceptions. The compromise: every component token requires a written justification and shows up in a monthly report. Eighteen months later there are nine, each one documented. Containment beat prohibition.
+</Callout>
+
+## Outcomes
+
+Dark mode — the project that motivated the work — shipped six weeks after the token release, by one engineer and me remapping the semantic tier. The 641 hard-coded values are gone, the lint rule keeps them gone, and the design-to-engineering handoff lost its most reliable source of friction: nobody debates which gray anymore.
+
+<StatRow
+  stats={[
+    { value: '4', label: 'product teams migrated, two sprints each' },
+    { value: '9', label: 'component-token exceptions, all documented' },
+    { value: '2', label: 'themes in production from one semantic layer' },
+  ]}
+/>
+
+<PullQuote attribution="Staff engineer, platform">
+  <p>The codemods did the typing, but the spreadsheet did the convincing. Having every rogue value on screen with a usage count ended the debate about whether this was a real problem.</p>
+</PullQuote>
+
+## Reflection
+
+The exceptions list was the most valuable artifact and I under-designed it. Treating exceptions as first-class — named, justified, reviewed monthly — is what kept the architecture honest, and I'd build that report on day one rather than retrofitting it after the first audit drift.

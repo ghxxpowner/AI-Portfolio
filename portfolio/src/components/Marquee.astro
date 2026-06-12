@@ -1,0 +1,67 @@
+---
+interface Props {
+  items: string[];
+  inverse?: boolean;
+}
+
+const { items, inverse = false } = Astro.props;
+---
+
+<div class:list={['marquee', { 'marquee-inverse': inverse }]}>
+  <div class="marquee-track">
+    <ul role="list" class="marquee-list">
+      {items.map((item) => <li>{item}</li>)}
+    </ul>
+    <ul role="list" class="marquee-list" aria-hidden="true">
+      {items.map((item) => <li>{item}</li>)}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: clip;
+    padding-block: var(--space-lg);
+    border-block: var(--border-hairline);
+  }
+
+  .marquee-inverse {
+    border-color: var(--color-inverse-border);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+  }
+
+  .marquee-list {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .marquee-list li {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding-inline: var(--space-lg);
+    font-size: var(--text-2xl);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    text-transform: uppercase;
+  }
+
+  .marquee-inverse .marquee-list li {
+    color: var(--color-inverse-text);
+  }
+
+  .marquee-list li::after {
+    content: '';
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    margin-inline-start: calc(var(--space-lg) * 2);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-sm);
+    rotate: 45deg;
+  }
+</style>

@@ -1,0 +1,197 @@
+/* ==========================================================================
+   Design tokens
+   --------------------------------------------------------------------------
+   Two tiers, one rule:
+
+   1. PRIMITIVES  (--gray-*, --neon-*, raw scales)
+      Context-free values. Never referenced by components.
+
+   2. SEMANTIC    (--color-*, --text-*, --space-*, --radius-*, --duration-*)
+      The only tokens components may consume. Theming happens here:
+      dark mode remaps semantic color tokens, primitives stay untouched.
+
+   Accent guardrail: neon (#e1fc06) is NEVER a text color and never carries
+   anything but --color-on-accent (ink). Neon on white is ~1.07:1 — it exists
+   only as a fill behind dark text, as glow, or as decorative highlight.
+
+   If you find yourself writing var(--gray-600) inside a component,
+   you are missing a semantic token. Add one.
+   ========================================================================== */
+
+:root {
+  /* --------------------------------------------------------------------
+     Tier 1 — primitives
+     -------------------------------------------------------------------- */
+
+  /* Neutral ramp */
+  --gray-0: #ffffff;
+  --gray-50: #f6f6f6;
+  --gray-100: #ececec;
+  --gray-200: #d1d1d1;
+  --gray-300: #b0b0b0;
+  --gray-400: #888888;
+  --gray-500: #6d6d6d;
+  --gray-600: #5d5d5d;
+  --gray-700: #4f4f4f;
+  --gray-800: #383838;
+  --gray-850: #2c2c2c;
+  --gray-900: #161616;
+  --gray-1000: #000000;
+
+  /* Accent — neon yellow-green */
+  --neon-500: #e1fc06;
+  --neon-600: #c9e205;
+  --ink: #0a0a0a;
+
+  /* Font stacks */
+  --stack-sans: 'Onest Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --stack-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+
+  /* --------------------------------------------------------------------
+     Tier 2 — semantic (consume these)
+     -------------------------------------------------------------------- */
+
+  /* Color */
+  --color-bg: var(--gray-50);
+  --color-bg-subtle: var(--gray-100);
+  --color-surface: var(--gray-0);
+  --color-text: var(--ink);
+  --color-text-muted: var(--gray-600);
+  --color-accent: var(--neon-500);
+  --color-accent-strong: var(--neon-600);
+  --color-on-accent: var(--ink);
+  --color-accent-glow: var(--neon-500);
+  --glow-opacity: 0.5;
+  --color-border: var(--gray-200);
+  --color-border-strong: var(--gray-300);
+  --color-focus-ring: var(--ink);
+
+  /* Inverted block (footer in light mode) */
+  --color-inverse-bg: var(--ink);
+  --color-inverse-text: var(--gray-0);
+  --color-inverse-text-muted: var(--gray-300);
+  --color-inverse-border: var(--gray-800);
+
+  /* Glass (overlay buttons on artwork) */
+  --color-glass-bg: rgb(0 0 0 / 0.12);
+  --color-glass-border: rgb(255 255 255 / 0.25);
+  --color-glass-text: var(--ink);
+
+  /* Typography — fluid scale (clamps between ~390px and 1440px) */
+  --font-body: var(--stack-sans);
+  --font-display: var(--stack-sans);
+  --font-mono: var(--stack-mono);
+
+  --text-xs: 0.75rem;
+  --text-sm: clamp(0.8125rem, 0.766rem + 0.19vw, 0.9375rem);
+  --text-md: clamp(0.9375rem, 0.891rem + 0.19vw, 1.0625rem);
+  --text-lg: clamp(1rem, 0.857rem + 0.45vw, 1.25rem);
+  --text-xl: clamp(1.125rem, 0.946rem + 0.67vw, 1.5rem);
+  --text-2xl: clamp(1.375rem, 1.054rem + 1.12vw, 2rem);
+  --text-3xl: clamp(1.75rem, 1.214rem + 1.96vw, 2.875rem);
+  --text-4xl: clamp(2.25rem, 1.357rem + 3.13vw, 4rem);
+  --text-5xl: clamp(2.625rem, 1.232rem + 4.24vw, 5rem);
+  --text-display: clamp(3rem, 0.857rem + 9.3vw, 8.25rem);
+
+  --leading-tight: 1.02;
+  --leading-snug: 1.3;
+  --leading-normal: 1.55;
+  --tracking-display: -0.045em;
+  --tracking-tight: -0.015em;
+  --tracking-wide: 0.08em;
+
+  /* Spacing — fluid */
+  --space-2xs: 0.25rem;
+  --space-xs: clamp(0.375rem, 0.33rem + 0.19vw, 0.5rem);
+  --space-sm: clamp(0.625rem, 0.58rem + 0.19vw, 0.75rem);
+  --space-md: clamp(0.875rem, 0.786rem + 0.37vw, 1.125rem);
+  --space-lg: clamp(1.125rem, 0.857rem + 0.89vw, 1.75rem);
+  --space-xl: clamp(1.625rem, 1.232rem + 1.34vw, 2.75rem);
+  --space-2xl: clamp(2.25rem, 1.643rem + 2.23vw, 4rem);
+  --space-3xl: clamp(3.25rem, 2.268rem + 3.57vw, 6rem);
+  --space-4xl: clamp(4.25rem, 2.911rem + 4.91vw, 8rem);
+  --space-6xl: clamp(6rem, 3.679rem + 8.48vw, 12rem);
+
+  /* Radii */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 999px;
+
+  /* Borders */
+  --border-hairline: 1px solid var(--color-border);
+
+  /* Motion */
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-soft: cubic-bezier(0.25, 0.6, 0.3, 1);
+  --duration-quick: 200ms;
+  --duration-slow: 400ms;
+  --duration-reveal: 1000ms;
+
+  /* Layout */
+  --measure: 68ch;
+  --container-max: 80rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+}
+
+/* Dark theme — explicit choice via toggle */
+[data-theme='dark'] {
+  --color-bg: var(--gray-1000);
+  --color-bg-subtle: var(--gray-900);
+  --color-surface: var(--gray-850);
+  --color-text: var(--gray-50);
+  --color-text-muted: var(--gray-300);
+  --color-accent: var(--neon-500);
+  --color-accent-strong: var(--neon-600);
+  --color-on-accent: var(--ink);
+  --glow-opacity: 0.14;
+  --color-border: var(--gray-800);
+  --color-border-strong: var(--gray-700);
+  --color-focus-ring: var(--neon-500);
+
+  --color-inverse-bg: var(--gray-850);
+  --color-inverse-text: var(--gray-0);
+  --color-inverse-text-muted: var(--gray-300);
+  --color-inverse-border: var(--gray-700);
+
+  --color-glass-bg: rgb(255 255 255 / 0.1);
+  --color-glass-border: rgb(255 255 255 / 0.22);
+  --color-glass-text: var(--gray-0);
+}
+
+/* Dark theme — OS preference, only while no explicit choice is stored */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg: var(--gray-1000);
+    --color-bg-subtle: var(--gray-900);
+    --color-surface: var(--gray-850);
+    --color-text: var(--gray-50);
+    --color-text-muted: var(--gray-300);
+    --color-accent: var(--neon-500);
+    --color-accent-strong: var(--neon-600);
+    --color-on-accent: var(--ink);
+    --glow-opacity: 0.14;
+    --color-border: var(--gray-800);
+    --color-border-strong: var(--gray-700);
+    --color-focus-ring: var(--neon-500);
+
+    --color-inverse-bg: var(--gray-850);
+    --color-inverse-text: var(--gray-0);
+    --color-inverse-text-muted: var(--gray-300);
+    --color-inverse-border: var(--gray-700);
+
+    --color-glass-bg: rgb(255 255 255 / 0.1);
+    --color-glass-border: rgb(255 255 255 / 0.22);
+    --color-glass-text: var(--gray-0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-quick: 0ms;
+    --duration-slow: 0ms;
+    --duration-reveal: 0ms;
+  }
+}

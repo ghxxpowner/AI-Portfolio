@@ -1,0 +1,62 @@
+---
+interface Props {
+  href: string;
+  variant?: 'neon' | 'ink' | 'ghost';
+}
+
+const { href, variant = 'neon' } = Astro.props;
+---
+
+<a class:list={['pill', `pill-${variant}`]} {href}>
+  <slot />
+</a>
+
+<style>
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    border: 1px solid transparent;
+    transition:
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic),
+      border-color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .pill-neon {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .pill-neon:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+  }
+
+  .pill-ink {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+  }
+
+  .pill-ink:hover {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .pill-ghost {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+
+  .pill-ghost:hover {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+</style>

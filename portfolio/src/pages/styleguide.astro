@@ -1,0 +1,507 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GlowBlob from '../components/GlowBlob.astro';
+import PillButton from '../components/PillButton.astro';
+import ScrollDownButton from '../components/ScrollDownButton.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Callout from '../components/Callout.astro';
+import PullQuote from '../components/PullQuote.astro';
+import StatRow from '../components/StatRow.astro';
+import TokenTable from '../components/TokenTable.astro';
+import MetaGrid from '../components/MetaGrid.astro';
+import Marquee from '../components/Marquee.astro';
+import StatCards from '../components/StatCards.astro';
+
+const [sampleEntry] = (await getCollection('work', ({ data }) => data.featured)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const colorTokens = [
+  { name: '--color-bg', note: 'Page background' },
+  { name: '--color-bg-subtle', note: 'Subtle fills, chips' },
+  { name: '--color-surface', note: 'Cards and panels' },
+  { name: '--color-text', note: 'Primary text' },
+  { name: '--color-text-muted', note: 'Secondary text' },
+  { name: '--color-accent', note: 'Neon — fills only, never text' },
+  { name: '--color-on-accent', note: 'The only color allowed on neon' },
+  { name: '--color-border', note: 'Hairlines' },
+];
+
+const typeScale = [
+  { token: '--text-display', sample: 'Display' },
+  { token: '--text-5xl', sample: 'Heading 5XL' },
+  { token: '--text-3xl', sample: 'Heading 3XL' },
+  { token: '--text-xl', sample: 'Heading XL' },
+  { token: '--text-lg', sample: 'Lead paragraph' },
+  { token: '--text-md', sample: 'Body text' },
+  { token: '--text-sm', sample: 'Secondary text' },
+  { token: '--text-xs', sample: 'Caption / eyebrow' },
+];
+
+const spaceScale = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '6xl'];
+
+const sections = [
+  { id: 'colors', label: 'Colors' },
+  { id: 'type', label: 'Typography' },
+  { id: 'spacing', label: 'Spacing' },
+  { id: 'buttons', label: 'Buttons' },
+  { id: 'cards', label: 'Cards' },
+  { id: 'artifacts', label: 'Artifacts' },
+  { id: 'motion', label: 'Motion' },
+];
+---
+
+<BaseLayout
+  title="Styleguide"
+  description="The living design system behind this site: tokens, fluid type and spacing scales, components and the motion contract — documented with the same rigor I bring to client systems."
+>
+  <div class="container">
+    <header class="page-head" data-reveal>
+      <GlowBlob size="36rem" top="-16rem" right="-12rem" />
+      <h1 class="display" data-split="chars">Styleguide</h1>
+      <div data-split="lines">
+        <p class="page-sub">
+          This site runs on its own design system — two token tiers, one font, a fluid scale and a
+          strict motion contract. This page documents it live: every swatch, size and component
+          below reads from the same tokens the site uses, so toggling the theme re-themes this
+          documentation too.
+        </p>
+      </div>
+      <nav aria-label="Styleguide sections" data-reveal-item style="--index: 3">
+        <ul role="list" class="jump-nav">
+          {
+            sections.map((s) => (
+              <li>
+                <a href={`#${s.id}`}>{s.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Colors -->
+    <section class="sg-block" id="colors" aria-labelledby="colors-h" data-reveal>
+      <h2 id="colors-h" class="display sg-title" data-reveal-item style="--index: 0">Colors</h2>
+      <p class="sg-note" data-reveal-item style="--index: 1">
+        Semantic tokens only — components never touch primitives. Dark mode remaps this layer and
+        nothing else. One guardrail: <strong>neon is never a text color</strong>; it carries
+        exclusively <code>--color-on-accent</code> (≈1.07:1 on white — fill, glow and highlight
+        duty only).
+      </p>
+      <ul role="list" class="swatches" data-reveal-item style="--index: 2">
+        {
+          colorTokens.map((token) => (
+            <li class="swatch">
+              <span class="swatch-chip" style={`background-color: var(${token.name})`} />
+              <code>{token.name}</code>
+              <span class="swatch-note">{token.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Typography -->
+    <section class="sg-block" id="type" aria-labelledby="type-h" data-reveal>
+      <h2 id="type-h" class="display sg-title" data-reveal-item style="--index: 0">Typography</h2>
+      <p class="sg-note" data-reveal-item style="--index: 1">
+        One family — Onest Variable, self-hosted — across every weight. Every step is fluid via
+        <code>clamp()</code>, so there are no breakpoint jumps. Uppercase is opt-in
+        (<code>.display</code>) and reserved for short statement headings.
+      </p>
+      <ul role="list" class="type-rows" data-reveal-item style="--index: 2">
+        {
+          typeScale.map((step) => (
+            <li class="type-row">
+              <code class="type-token">{step.token}</code>
+              <span class="type-sample" style={`font-size: var(${step.token})`}>
+                {step.sample}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Spacing -->
+    <section class="sg-block" id="spacing" aria-labelledby="spacing-h" data-reveal>
+      <h2 id="spacing-h" class="display sg-title" data-reveal-item style="--index: 0">Spacing</h2>
+      <p class="sg-note" data-reveal-item style="--index: 1">
+        A fluid scale on a 4px grid: each step is a <code>clamp()</code> that breathes with the
+        viewport. Resize the window and watch the bars grow.
+      </p>
+      <ul role="list" class="space-rows" data-reveal-item style="--index: 2">
+        {
+          spaceScale.map((step) => (
+            <li class="space-row">
+              <code>--space-{step}</code>
+              <span class="space-bar" style={`inline-size: var(--space-${step})`} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Buttons -->
+    <section class="sg-block" id="buttons" aria-labelledby="buttons-h" data-reveal>
+      <h2 id="buttons-h" class="display sg-title" data-reveal-item style="--index: 0">Buttons</h2>
+      <p class="sg-note" data-reveal-item style="--index: 1">
+        Three pill variants plus the circular scroll cue. Hovers invert within 200ms; every control
+        is keyboard-focusable with a visible ring and a ≥44px hit area.
+      </p>
+      <div class="specimen-row" data-reveal-item style="--index: 2">
+        <PillButton href="#buttons">Neon — primary</PillButton>
+        <PillButton href="#buttons" variant="ink">Ink — secondary</PillButton>
+        <PillButton href="#buttons" variant="ghost">Ghost — tertiary</PillButton>
+        <ScrollDownButton href="#cards" label="Scroll cue specimen" />
+      </div>
+    </section>
+
+    <!-- Cards -->
+    <section class="sg-block" id="cards" aria-labelledby="cards-h" data-reveal>
+      <h2 id="cards-h" class="display sg-title" data-reveal-item style="--index: 0">Cards</h2>
+      <p class="sg-note" data-reveal-item style="--index: 1">
+        The project card below is the real component, fed by the real content collection. Hover or
+        focus it: the artwork scales 1.05 over one second while a glass arrow fades in — the same
+        affordance works for keyboard users via <code>:focus-within</code>.
+      </p>
+      {
+        sampleEntry && (
+          <div class="card-specimen" data-reveal-item style="--index: 2">
+            <ProjectCard entry={sampleEntry} />
+          </div>
+        )
+      }
+      <p class="sg-note" data-reveal-item style="--index: 3">
+        Stat cards come in the four surface treatments of the system — surface, gradient, ink and
+        neon. One rule binds them: whatever sits on neon is <code>--color-on-accent</code>.
+      </p>
+      <div data-reveal-item style="--index: 4">
+        <StatCards
+          stats={[
+            { value: '01', label: 'surface — default card', variant: 'surface' },
+            { value: '02', label: 'gradient — surface into neon', variant: 'gradient' },
+            { value: '03', label: 'ink — inverted block', variant: 'ink' },
+            { value: '04', label: 'neon — full accent', variant: 'neon' },
+          ]}
+        />
+      </div>
+    </section>
+
+    <!-- Artifacts -->
+    <section class="sg-block" id="artifacts" aria-labelledby="artifacts-h" data-reveal>
+      <h2 id="artifacts-h" class="display sg-title" data-reveal-item style="--index: 0">
+        Case-study artifacts
+      </h2>
+      <p class="sg-note" data-reveal-item style="--index: 1">
+        Case studies are MDX composed from these blocks — adding a project means writing one file,
+        never new CSS. All of them are prop-driven and theme-aware.
+      </p>
+      <div class="artifact-stack" data-reveal-item style="--index: 2">
+        <StatRow
+          stats={[
+            { value: '2', label: 'token tiers — primitives feed semantics' },
+            { value: '1', label: 'variable font, self-hosted' },
+            { value: '~5KB', label: 'of JavaScript for the entire motion layer' },
+          ]}
+        />
+        <MetaGrid
+          items={[
+            { term: 'Component', detail: 'MetaGrid' },
+            { term: 'Source', detail: 'src/components' },
+            { term: 'Themed via', detail: 'Semantic tokens' },
+            { term: 'A11y', detail: 'Definition list semantics' },
+          ]}
+        />
+        <Callout label="Guardrail">
+          <p>
+            Neon never carries text. If a surface is <code>--color-accent</code>, the only
+            foreground allowed on it is <code>--color-on-accent</code> — encoded in the tokens, not
+            in a guideline document.
+          </p>
+        </Callout>
+        <PullQuote attribution="This site's token file, line 14">
+          <p>If you find yourself writing var(--gray-600) inside a component, you are missing a semantic token. Add one.</p>
+        </PullQuote>
+        <TokenTable
+          caption="Motion tokens — the entire animation vocabulary of this site."
+          tokens={[
+            { name: '--ease-out-cubic', value: 'cubic-bezier(.33,1,.68,1)', usage: 'Every entrance and hover' },
+            { name: '--duration-quick', value: '200ms', usage: 'Hovers, color inversions' },
+            { name: '--duration-reveal', value: '1000ms', usage: 'Scroll reveals, split text' },
+            { name: 'char stagger', value: '20ms', usage: 'Per character in split headings' },
+            { name: 'line stagger', value: '50ms', usage: 'Per line in split paragraphs' },
+          ]}
+        />
+      </div>
+    </section>
+
+    <!-- Motion -->
+    <section class="sg-block" id="motion" aria-labelledby="motion-h">
+      <div data-reveal>
+        <h2 id="motion-h" class="display sg-title" data-reveal-item style="--index: 0">Motion</h2>
+        <p class="sg-note" data-reveal-item style="--index: 1">
+          One IntersectionObserver flips a class; CSS does the rest. Characters rise out of clipped
+          line boxes, items stagger via a <code>--index</code> custom property. The contract:
+          <strong>nothing is ever hidden unless JavaScript is running and the visitor allows
+          motion</strong> — with reduced motion enabled this page simply appears, fully readable,
+          and the replay button below does nothing at all. That's the feature.
+        </p>
+      </div>
+      <div class="motion-demo" data-reveal data-motion-demo>
+        <p class="display demo-heading" data-split="chars">Motion demo</p>
+        <div data-split="lines">
+          <p class="demo-line">Lines rise with a 50ms stagger,</p>
+          <p class="demo-line">characters with 20ms —</p>
+          <p class="demo-line">all on one 1s ease-out-cubic curve.</p>
+        </div>
+        <div class="demo-chips">
+          {
+            [0, 1, 2, 3].map((i) => (
+              <span class="demo-chip" data-reveal-item style={`--index: ${i}`}>
+                chip {i + 1}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+      <div data-reveal>
+        <div class="specimen-row" data-reveal-item style="--index: 0">
+          <button class="replay" type="button" data-replay>Replay motion demo</button>
+        </div>
+        <div class="marquee-specimen" data-reveal-item style="--index: 1">
+          <Marquee items={['Tokens', 'Components', 'Motion', 'Accessibility']} />
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  // Replay: drop the visibility class, force a reflow, re-add it.
+  // Under reduced motion nothing is hidden, so this is intentionally a no-op.
+  const demo = document.querySelector('[data-motion-demo]');
+  document.querySelector('[data-replay]')?.addEventListener('click', () => {
+    if (!demo) return;
+    demo.classList.remove('is-visible');
+    void (demo as HTMLElement).offsetWidth;
+    demo.classList.add('is-visible');
+  });
+</script>
+
+<style>
+  .page-head {
+    position: relative;
+    display: grid;
+    gap: var(--space-lg);
+    padding-block: var(--space-4xl) var(--space-3xl);
+  }
+
+  h1 {
+    font-size: var(--text-display);
+  }
+
+  .page-sub {
+    max-width: 60ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .jump-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-sm);
+  }
+
+  .jump-nav a {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--text-sm);
+    font-weight: 550;
+    text-decoration: none;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .jump-nav a:hover {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .sg-block {
+    padding-block: var(--space-3xl);
+    border-block-start: var(--border-hairline);
+  }
+
+  .sg-title {
+    font-size: var(--text-3xl);
+  }
+
+  .sg-note {
+    max-width: 60ch;
+    margin-block: var(--space-md) var(--space-xl);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .sg-note code,
+  .type-row code,
+  .space-row code,
+  .swatch code {
+    font-size: 0.85em;
+    padding: 0.1em 0.4em;
+    background-color: var(--color-bg-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Colors */
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+    gap: var(--space-md);
+  }
+
+  .swatch {
+    display: grid;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  .swatch-chip {
+    block-size: 3.5rem;
+    border: var(--border-hairline);
+    border-radius: var(--radius-md);
+  }
+
+  .swatch-note {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Type */
+  .type-rows {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .type-row {
+    display: grid;
+    gap: var(--space-xs);
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .type-sample {
+    font-weight: 650;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    white-space: nowrap;
+  }
+
+  /* Spacing */
+  .space-rows {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: 40rem;
+  }
+
+  .space-row {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .space-bar {
+    block-size: 1.25rem;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Specimens */
+  .specimen-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .card-specimen {
+    max-width: 44rem;
+  }
+
+  .artifact-stack {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  /* Motion demo */
+  .motion-demo {
+    display: grid;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    margin-block-end: var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+  }
+
+  .demo-heading {
+    font-size: var(--text-3xl);
+  }
+
+  .demo-line {
+    color: var(--color-text-muted);
+  }
+
+  .demo-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .demo-chip {
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-full);
+  }
+
+  .replay {
+    padding: var(--space-sm) var(--space-lg);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-bg);
+    background-color: var(--color-text);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .replay:hover {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .marquee-specimen {
+    margin-block-start: var(--space-xl);
+  }
+</style>

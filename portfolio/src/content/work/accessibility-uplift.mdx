@@ -1,0 +1,116 @@
+---
+title: 'An accessibility uplift that sticks'
+summary: 'Bringing a 58-component library to WCAG 2.2 AA — not as an audit-and-patch sprint, but by rebuilding the system''s defaults so the accessible way is the only way components ship.'
+client: 'Health-tech provider'
+year: '2023–2024'
+role: 'Product designer, accessibility lead'
+team: '1 designer, 2 engineers, external auditor'
+timeline: '7 months'
+platform: 'Web, patient & clinician portals'
+discipline: ['Accessibility', 'WCAG 2.2', 'Component remediation']
+artwork: 'a11y'
+featured: false
+order: 4
+stats:
+  - value: '58'
+    label: 'components brought to WCAG 2.2 AA'
+  - value: '312 → 0'
+    label: 'open critical and serious audit findings'
+  - value: '94%'
+    label: 'of findings fixed once, at system level — not per screen'
+  - value: 'AA'
+    label: 'verified by an independent re-audit'
+---
+
+import TokenTable from '../../components/TokenTable.astro';
+import BeforeAfter from '../../components/BeforeAfter.astro';
+import Callout from '../../components/Callout.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import StatRow from '../../components/StatRow.astro';
+
+## Context
+
+A health-tech provider serving patients and clinicians — an audience where low vision, motor impairment, and assistive technology aren't edge cases but Tuesday. An external audit triggered by a public-sector contract returned 312 critical and serious findings, and the contract made AA conformance a deadline, not an aspiration. The library at the center of every screen was also the center of every finding.
+
+## Problem
+
+The findings list looked like 312 separate problems. It wasn't — it was about fifteen problems, each multiplied across screens by the component library. Invisible focus states alone accounted for 67 findings. The trap in remediation work is fixing findings where the auditor found them, screen by screen; the fix decays as soon as teams ship the next screen. The real job was to **fix the system's defaults so conformance is what falls out when nobody is thinking about it**.
+
+## My role
+
+I led the remediation design: clustering the audit into root causes, redesigning the failing patterns (focus, contrast, target size, form errors, motion), encoding the rules as tokens and acceptance criteria, and running the verification protocol with the external auditor. Engineering rebuilt the component internals; I owned what "done" meant.
+
+## Process
+
+### From 312 findings to 15 root causes
+
+Week one was spent re-tagging every finding by root cause and by component rather than by screen. The resulting matrix did two things: it showed that 94% of findings could be closed at system level, and it gave us an honest priority order — focus visibility, color contrast, and form error handling covered more than half the list between them.
+
+### Accessibility as tokens, not guidelines
+
+Wherever a rule could be a value, it became a token — because tokens are enforced by the build, and guidelines are enforced by memory. Focus ring geometry, minimum target sizes, and motion durations all moved into the token layer, alongside a contrast-checked color ramp where every text/background pairing is verified in CI.
+
+<TokenTable
+  caption="The accessibility-critical token set. These are system-owned: product teams consume them and cannot override them."
+  tokens={[
+    { name: 'focus.ring.width', value: '2px', tier: 'Semantic', usage: 'Focus indicator on every interactive component; paired with 2px offset so it never hugs the edge' },
+    { name: 'focus.ring.color', value: '#1d4ed8', swatch: '#1d4ed8', tier: 'Semantic', usage: 'Verified ≥ 3:1 against every approved surface color, both themes, in CI' },
+    { name: 'target.min', value: '44px', tier: 'Semantic', usage: 'Minimum hit area for all controls — exceeds WCAG 2.2 (24px) deliberately for the patient portal' },
+    { name: 'motion.duration.ui', value: '150ms', tier: 'Semantic', usage: 'All UI transitions; resolves to 0ms under prefers-reduced-motion' },
+    { name: 'text.error', value: '#a4262c', swatch: '#a4262c', tier: 'Semantic', usage: 'Error text — always paired with an icon and message, never color alone' },
+  ]}
+/>
+
+### The patterns that did the heavy lifting
+
+The two highest-impact redesigns were the least glamorous. Focus states went from a faint native outline to a system-owned two-layer ring visible on any surface. Form errors went from red borders to a full pattern: the message names the problem, sits in the field's `aria-describedby`, and focus moves to the first invalid field on submit.
+
+<BeforeAfter
+  beforeLabel="Before — finding #67, repeated"
+  afterLabel="After — system default"
+  caption="Focus visibility, the single largest finding cluster. Left: focus indicated by a 1px border-color change. Right: the system-owned ring — 2px, offset, contrast-verified on every surface."
+>
+  <svg slot="before" viewBox="0 0 400 225" aria-hidden="true">
+    <rect x="60" y="80" width="280" height="56" rx="10" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="1.5" />
+    <rect x="92" y="100" width="140" height="14" rx="7" fill="var(--color-border-strong)" />
+  </svg>
+  <svg slot="after" viewBox="0 0 400 225" aria-hidden="true">
+    <rect x="48" y="68" width="304" height="80" rx="14" fill="none" stroke="var(--color-accent)" stroke-width="3" />
+    <rect x="60" y="80" width="280" height="56" rx="10" fill="var(--color-surface)" stroke="var(--color-border-strong)" stroke-width="1.5" />
+    <rect x="92" y="100" width="140" height="14" rx="7" fill="var(--color-text-muted)" />
+  </svg>
+</BeforeAfter>
+
+### Verification that outlives the project
+
+Every component spec gained an accessibility acceptance section — keyboard script, screen-reader announcement, contrast pairs — that the auditor's checklist and our Storybook tests share. Conformance is re-verified on every component change, not every contract renewal.
+
+## Decisions & trade-offs
+
+<Callout label="Decision">
+  We set the minimum target size at **44px, above the WCAG 2.2 requirement of 24px**. For a patient portal where tremor and low dexterity are common, the legal floor isn't the design target. Density complaints from the clinician portal were resolved with a compact-but-still-44px layout, not smaller targets.
+</Callout>
+
+<Callout label="Trade-off">
+  Fixing at system level meant the **first eight weeks closed zero findings** — uncomfortable with a contract deadline. We held the order anyway: patching screens first would have doubled the work and left the decay problem intact. The burn-down was steep precisely because it started late.
+</Callout>
+
+## Outcomes
+
+The independent re-audit confirmed AA conformance with zero critical or serious findings, and the contract was retained. The more durable outcome is structural: 94% of fixes live in the system, the acceptance criteria gate every new component, and the next audit is a regression check, not a crisis.
+
+<StatRow
+  stats={[
+    { value: '15', label: 'root-cause patterns redesigned, closing 312 findings' },
+    { value: '67', label: 'findings closed by the focus-state redesign alone' },
+    { value: '100%', label: 'of components with executable a11y acceptance criteria' },
+  ]}
+/>
+
+<PullQuote attribution="External auditor, re-audit debrief">
+  <p>Most remediations we re-audit have regressed by the time we arrive. This one had improved — that's what fixing the system instead of the screens buys you.</p>
+</PullQuote>
+
+## Reflection
+
+I'd involve the external auditor in the root-cause clustering from the start rather than presenting it to them afterward. When they co-signed the matrix, their re-audit tested our fifteen patterns instead of re-walking 312 findings — weeks of verification time we could have banked earlier.

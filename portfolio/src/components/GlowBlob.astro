@@ -1,0 +1,30 @@
+---
+interface Props {
+  size?: string;
+  top?: string;
+  right?: string;
+  bottom?: string;
+  left?: string;
+}
+
+const { size = '40rem', top, right, bottom, left } = Astro.props;
+---
+
+<div
+  class="glow"
+  aria-hidden="true"
+  style={{ '--glow-size': size, top, right, bottom, left }}
+>
+</div>
+
+<style>
+  .glow {
+    position: absolute;
+    z-index: -1;
+    inline-size: var(--glow-size);
+    block-size: var(--glow-size);
+    pointer-events: none;
+    background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 65%);
+    opacity: var(--glow-opacity);
+  }
+</style>

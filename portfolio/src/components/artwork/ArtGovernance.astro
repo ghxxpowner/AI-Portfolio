@@ -1,0 +1,39 @@
+---
+// Contribution flow: proposals branching off and merging back into a main line.
+const branches = [
+  { x: 180, merge: 330, up: true },
+  { x: 300, merge: 470, up: false },
+  { x: 430, merge: 590, up: true },
+  { x: 560, merge: 700, up: false },
+];
+---
+
+<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <!-- main line -->
+  <line x1="60" y1="225" x2="740" y2="225" stroke="var(--color-text-muted)" stroke-width="3"></line>
+
+  {
+    branches.map((b) => {
+      const peak = b.up ? 120 : 330;
+      return (
+        <g>
+          <path
+            d={`M${b.x} 225 C ${b.x + 30} ${peak}, ${b.x + 50} ${peak}, ${(b.x + b.merge) / 2} ${peak} S ${b.merge - 30} ${peak}, ${b.merge} 225`}
+            fill="none"
+            stroke="var(--color-accent)"
+            stroke-width="2"
+          />
+          <circle cx={(b.x + b.merge) / 2} cy={peak} r="9" fill="var(--color-surface)" stroke="var(--color-accent)" stroke-width="2" />
+          <circle cx={b.merge} cy="225" r="7" fill="var(--color-accent)" />
+        </g>
+      );
+    })
+  }
+
+  <!-- release nodes on the main line -->
+  <circle cx="60" cy="225" r="9" fill="var(--color-text-muted)"></circle>
+  <circle cx="740" cy="225" r="9" fill="var(--color-text-muted)"></circle>
+
+  <!-- review gate -->
+  <rect x="384" y="196" width="58" height="58" rx="12" fill="none" stroke="var(--color-border-strong)" stroke-width="2" stroke-dasharray="5 5" transform="rotate(45 413 225)"></rect>
+</svg>

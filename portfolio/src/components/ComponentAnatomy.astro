@@ -1,0 +1,113 @@
+---
+interface Props {
+  title: string;
+  labels: { title: string; note: string }[];
+}
+
+const { title, labels } = Astro.props;
+
+// Fixed marker positions for the button diagram, in drawing order:
+// 1 container, 2 leading icon, 3 label, 4 focus ring
+const markers = [
+  { x: 612, y: 180, lx1: 556, ly1: 180, lx2: 594, ly2: 180 },
+  { x: 290, y: 84, lx1: 290, ly1: 102, lx2: 290, ly2: 160 },
+  { x: 400, y: 286, lx1: 400, ly1: 268, lx2: 400, ly2: 196 },
+  { x: 168, y: 110, lx1: 182, ly1: 122, lx2: 230, ly2: 142 },
+].slice(0, labels.length);
+---
+
+<div class="anatomy full-width">
+  <p class="eyebrow anatomy-title">{title}</p>
+  <div class="anatomy-frame">
+    <svg viewBox="0 0 800 360" aria-hidden="true">
+      <!-- focus ring -->
+      <rect
+        x="236"
+        y="136"
+        width="328"
+        height="88"
+        rx="18"
+        fill="none"
+        stroke="var(--color-accent)"
+        stroke-width="2"
+        stroke-dasharray="6 6"
+      ></rect>
+      <!-- button container -->
+      <rect
+        x="248"
+        y="148"
+        width="304"
+        height="64"
+        rx="12"
+        fill="var(--color-surface)"
+        stroke="var(--color-border-strong)"
+        stroke-width="2"
+      ></rect>
+      <!-- leading icon -->
+      <circle cx="290" cy="180" r="11" fill="none" stroke="var(--color-text-muted)" stroke-width="2"></circle>
+      <!-- label bar -->
+      <rect x="318" y="172" width="164" height="16" rx="8" fill="var(--color-text-muted)"></rect>
+      {
+        markers.map((m, i) => (
+          <g>
+            <line x1={m.lx1} y1={m.ly1} x2={m.lx2} y2={m.ly2} stroke="var(--color-accent)" stroke-width="1.5" />
+            <circle cx={m.x} cy={m.y} r="15" fill="var(--color-accent)" />
+            <text x={m.x} y={m.y} text-anchor="middle" dominant-baseline="central" class="marker-num">
+              {i + 1}
+            </text>
+          </g>
+        ))
+      }
+    </svg>
+  </div>
+  <ol class="anatomy-labels">
+    {
+      labels.map((label) => (
+        <li>
+          <strong>{label.title}</strong> — {label.note}
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .anatomy {
+    --flow-space: var(--space-xl);
+  }
+
+  .anatomy-frame {
+    margin-block-start: var(--space-sm);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  svg {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .marker-num {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--color-on-accent);
+  }
+
+  .anatomy-labels {
+    max-width: var(--measure);
+    margin-block-start: var(--space-md);
+    padding-inline-start: 1.25em;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .anatomy-labels li + li {
+    margin-block-start: var(--space-xs);
+  }
+
+  .anatomy-labels strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+</style>

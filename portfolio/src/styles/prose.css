@@ -1,0 +1,66 @@
+/* Editorial typography for case-study bodies (MDX output) */
+
+.prose {
+  --flow-space: var(--space-md);
+}
+
+.prose > * {
+  max-width: var(--measure);
+}
+
+.prose > :where(h2, h3) + * {
+  --flow-space: var(--space-md);
+}
+
+.prose h2 {
+  --flow-space: var(--space-3xl);
+  font-size: var(--text-2xl);
+}
+
+.prose h3 {
+  --flow-space: var(--space-xl);
+  font-size: var(--text-xl);
+}
+
+.prose p,
+.prose li {
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+}
+
+.prose ul,
+.prose ol {
+  padding-inline-start: 1.25em;
+}
+
+.prose li + li {
+  margin-block-start: var(--space-xs);
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose a {
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+}
+
+.prose code {
+  padding: 0.1em 0.35em;
+  background-color: var(--color-bg-subtle);
+  border: var(--border-hairline);
+  border-radius: var(--radius-sm);
+}
+
+.prose hr {
+  --flow-space: var(--space-2xl);
+  border: 0;
+  border-block-start: var(--border-hairline);
+}
+
+/* Artifact components may break out of the reading measure */
+.prose :where(.full-width) {
+  max-width: none;
+}

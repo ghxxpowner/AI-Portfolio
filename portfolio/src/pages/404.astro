@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PillButton from '../components/PillButton.astro';
+import GlowBlob from '../components/GlowBlob.astro';
+---
+
+<BaseLayout title="Page not found" description="This page doesn't exist. The work does — it's one click away.">
+  <div class="container not-found" data-reveal>
+    <GlowBlob size="38rem" top="-14rem" right="-12rem" />
+    <p class="display nf-code" data-split="chars">404</p>
+    <h1 data-reveal-item style="--index: 1">This page isn't in the system.</h1>
+    <p class="nf-text" data-reveal-item style="--index: 2">
+      The URL you followed doesn't resolve to anything here. The case studies, on the other hand,
+      are exactly where they should be.
+    </p>
+    <div class="nf-links" data-reveal-item style="--index: 3">
+      <PillButton href="/work/">View the work</PillButton>
+      <PillButton href="/" variant="ghost">Go home</PillButton>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    gap: var(--space-md);
+    padding-block: var(--space-4xl) var(--space-6xl);
+  }
+
+  .nf-code {
+    font-size: var(--text-display);
+  }
+
+  h1 {
+    max-width: 20ch;
+    font-size: var(--text-2xl);
+  }
+
+  .nf-text {
+    max-width: 44ch;
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-md);
+  }
+</style>

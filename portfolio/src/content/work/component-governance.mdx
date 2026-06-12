@@ -1,0 +1,99 @@
+---
+title: 'Governance for a system nobody owned'
+summary: 'Turning a stalled component library at a mobility scale-up into a governed, contributed-to system — a contribution model, a review gate that scales, and adoption that doubled in a year.'
+client: 'Mobility scale-up'
+year: '2024–2025'
+role: 'Design systems lead'
+team: '2 designers, 2 engineers (federated)'
+timeline: '12 months, ongoing'
+platform: 'Web & React Native'
+discipline: ['Governance', 'Contribution model', 'Adoption']
+artwork: 'governance'
+featured: true
+order: 3
+stats:
+  - value: '87%'
+    label: 'of product UI built from system components, up from 41%'
+  - value: '3 days'
+    label: 'median contribution lead time, down from 11'
+  - value: '64%'
+    label: 'of new components contributed by product teams'
+  - value: '23'
+    label: 'product squads shipping on the system'
+---
+
+import Callout from '../../components/Callout.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import StatRow from '../../components/StatRow.astro';
+import Figure from '../../components/Figure.astro';
+
+## Context
+
+The company had a component library, a Figma kit, and a problem: both were maintained by whoever had spare time, which meant neither was maintained. Product squads had quietly stopped waiting — 59% of new UI shipped as local one-offs, and the library's issue tracker had become a graveyard of polite requests. I joined to run the system as a product, with a team of four serving twenty-three squads.
+
+## Problem
+
+Four people cannot build components for twenty-three squads; the math only works if the squads build and the system team governs. But the previous "everyone can contribute" policy had failed — contributions sat unreviewed for weeks, so people stopped contributing, so the library fell behind, so people built one-offs. The actual design problem was a **contribution process fast enough that using the system is lazier than bypassing it**.
+
+## My role
+
+I designed the governance model end to end — the contribution tiers, the RFC template, the review SLA, and the component lifecycle states — and ran it for the first year: triaging proposals, chairing reviews, and reporting adoption to leadership. My team owned quality gates; squads owned building.
+
+## Process
+
+### One front door, three sizes of yes
+
+Every request now enters through a single intake with a 48-hour triage SLA, and gets routed by weight: a *patch* (token fix, prop addition) needs one system reviewer; an *extension* (new variant of an existing component) needs a spec review; only a genuinely *new component* needs an RFC and a working session. The previous process treated a border-radius fix and a new data table with the same ceremony — which is why both took eleven days.
+
+<Figure caption="The contribution flow: proposals branch off, pass one review gate sized to their weight, and merge back. Nothing waits in an unowned queue.">
+  <svg viewBox="0 0 800 300" aria-hidden="true">
+    <line x1="48" y1="150" x2="752" y2="150" stroke="var(--color-text-muted)" stroke-width="3" />
+    <path d="M160 150 C 200 70, 280 70, 320 70 S 420 70, 460 150" fill="none" stroke="var(--color-accent)" stroke-width="2" />
+    <path d="M300 150 C 340 230, 420 230, 460 230 S 560 230, 600 150" fill="none" stroke="var(--color-accent)" stroke-width="2" />
+    <circle cx="320" cy="70" r="9" fill="var(--color-surface)" stroke="var(--color-accent)" stroke-width="2" />
+    <circle cx="460" cy="230" r="9" fill="var(--color-surface)" stroke="var(--color-accent)" stroke-width="2" />
+    <circle cx="460" cy="150" r="7" fill="var(--color-accent)" />
+    <circle cx="600" cy="150" r="7" fill="var(--color-accent)" />
+    <circle cx="48" cy="150" r="9" fill="var(--color-text-muted)" />
+    <circle cx="752" cy="150" r="9" fill="var(--color-text-muted)" />
+    <rect x="510" y="42" width="56" height="56" rx="12" fill="none" stroke="var(--color-border-strong)" stroke-width="2" stroke-dasharray="5 5" />
+  </svg>
+</Figure>
+
+### A lifecycle that lets things be imperfect in public
+
+Components now carry an explicit state — *experimental*, *stable*, *deprecated* — surfaced in both Figma and Storybook. Squads can publish an experimental component into a shared namespace immediately; promotion to stable is where the full quality gate (accessibility audit, API review, docs) applies. This killed the worst dynamic of the old model, where work hid in product codebases because the bar for entering the library was the bar for perfection.
+
+### Making adoption visible
+
+We instrumented the codebase: a weekly report counts system components versus local one-offs per squad, and the trend — not the absolute number — goes to each squad's engineering lead. No mandates were issued. Squads near the bottom of the chart asked for migration help within weeks; being measurably behind your peers turned out to be the only enforcement mechanism we needed.
+
+## Decisions & trade-offs
+
+<Callout label="Decision">
+  Review capacity is **scheduled, not heroic**: every system team member has two fixed review slots per week, and intake throttles to match. Predictable three-day turnarounds beat occasional same-day ones — contributors plan around an SLA, not around hope.
+</Callout>
+
+<Callout label="Trade-off">
+  The experimental namespace means **the library contains components we wouldn't have designed**. That's the cost of contribution at scale, and we accepted it deliberately: a federated system you can influence beats a pristine one nobody uses. The lifecycle states make the quality difference legible instead of pretending it away.
+</Callout>
+
+## Outcomes
+
+A year in, system coverage of product UI rose from 41% to 87%, and — the number I'm proudest of — 64% of new components were contributed by product squads, not built by my team. The system stopped being a bottleneck with a backlog and became infrastructure with a queue measured in days.
+
+<StatRow
+  stats={[
+    { value: '48h', label: 'triage SLA, met 96% of weeks' },
+    { value: '31', label: 'squad-contributed components promoted to stable' },
+    { value: '0', label: 'squads still maintaining a parallel component folder' },
+  ]}
+/>
+
+<PullQuote attribution="Engineering manager, consumer squad">
+  <p>We used to fork the library because asking was slower than building. Now asking is faster than building — that single fact changed how every team here ships UI.</p>
+</PullQuote>
+
+## Reflection
+
+I'd publish the adoption dashboard from week one. We spent months making the contribution process good before making the gap visible, and visibility turned out to be what created demand for the process. The order should have been reversed.

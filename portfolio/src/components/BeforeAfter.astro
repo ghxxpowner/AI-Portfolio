@@ -1,0 +1,72 @@
+---
+interface Props {
+  beforeLabel?: string;
+  afterLabel?: string;
+  caption: string;
+}
+
+const { beforeLabel = 'Before', afterLabel = 'After', caption } = Astro.props;
+---
+
+<figure class="before-after full-width">
+  <div class="panels">
+    <div class="panel">
+      <p class="eyebrow panel-label">{beforeLabel}</p>
+      <div class="panel-frame">
+        <slot name="before" />
+      </div>
+    </div>
+    <div class="panel">
+      <p class="eyebrow panel-label panel-label-after">{afterLabel}</p>
+      <div class="panel-frame">
+        <slot name="after" />
+      </div>
+    </div>
+  </div>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+  .before-after {
+    --flow-space: var(--space-xl);
+  }
+
+  .panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 40rem) {
+    .panels {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .panel-label-after {
+    display: inline-block;
+    padding: var(--space-2xs) var(--space-sm);
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-full);
+  }
+
+  .panel-frame {
+    margin-block-start: var(--space-xs);
+    overflow: hidden;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  .panel-frame > :global(svg) {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  figcaption {
+    margin-block-start: var(--space-sm);
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+</style>

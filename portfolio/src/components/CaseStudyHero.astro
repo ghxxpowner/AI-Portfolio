@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import MetaGrid from './MetaGrid.astro';
+import Artwork from './artwork/Artwork.astro';
+import GlowBlob from './GlowBlob.astro';
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+}
+
+const { entry } = Astro.props;
+const { title, summary, client, year, role, team, timeline, platform, artwork } = entry.data;
+
+const meta = [
+  { term: 'Role', detail: role },
+  { term: 'Team', detail: team },
+  { term: 'Timeline', detail: timeline },
+  { term: 'Platform', detail: platform },
+];
+---
+
+<header class="cs-hero" data-reveal>
+  <GlowBlob size="34rem" top="-16rem" right="-12rem" />
+  <p class="eyebrow" data-reveal-item style="--index: 0">{client} · {year}</p>
+  <h1 data-reveal-item style="--index: 1">{title}</h1>
+  <p class="summary" data-reveal-item style="--index: 2">{summary}</p>
+  <div data-reveal-item style="--index: 3">
+    <MetaGrid items={meta} />
+  </div>
+  <div data-reveal-item style="--index: 4">
+    <Artwork {artwork} />
+  </div>
+</header>
+
+<style>
+  .cs-hero {
+    position: relative;
+    display: grid;
+    gap: var(--space-lg);
+    padding-block-start: var(--space-3xl);
+  }
+
+  h1 {
+    max-width: 18ch;
+    font-size: var(--text-4xl);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .summary {
+    max-width: 50ch;
+    font-size: var(--text-xl);
+    line-height: var(--leading-snug);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+</style>

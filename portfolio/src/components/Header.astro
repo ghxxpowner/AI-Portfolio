@@ -35,6 +35,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       </ul>
     </nav>
     <ThemeToggle />
+    <a class="header-cta" href="mailto:hello@danielklinke.design">Let's talk</a>
   </div>
 </header>
 
@@ -113,6 +114,32 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
   .nav-link.is-active {
     color: var(--color-on-accent);
     background-color: var(--color-accent);
+  }
+
+  .header-cta {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .header-cta:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+  }
+
+  @media (max-width: 36rem) {
+    .header-cta {
+      display: none;
+    }
   }
 
   @media (max-width: 28rem) {

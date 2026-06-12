@@ -2,12 +2,14 @@
 interface Props {
   items: string[];
   inverse?: boolean;
+  size?: 'md' | 'xl';
+  borderless?: boolean;
 }
 
-const { items, inverse = false } = Astro.props;
+const { items, inverse = false, size = 'md', borderless = false } = Astro.props;
 ---
 
-<div class:list={['marquee', { 'marquee-inverse': inverse }]}>
+<div class:list={['marquee', `marquee-${size}`, { 'marquee-inverse': inverse, 'marquee-borderless': borderless }]}>
   <div class="marquee-track">
     <ul role="list" class="marquee-list">
       {items.map((item) => <li>{item}</li>)}
@@ -40,6 +42,10 @@ const { items, inverse = false } = Astro.props;
     flex-shrink: 0;
   }
 
+  .marquee-borderless {
+    border: none;
+  }
+
   .marquee-list li {
     display: flex;
     align-items: center;
@@ -49,6 +55,12 @@ const { items, inverse = false } = Astro.props;
     font-weight: 650;
     letter-spacing: var(--tracking-tight);
     text-transform: uppercase;
+  }
+
+  .marquee-xl .marquee-list li {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-display);
   }
 
   .marquee-inverse .marquee-list li {

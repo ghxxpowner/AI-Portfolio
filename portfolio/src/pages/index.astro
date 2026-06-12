@@ -5,10 +5,70 @@ import ProjectCard from '../components/ProjectCard.astro';
 import PillButton from '../components/PillButton.astro';
 import ScrollDownButton from '../components/ScrollDownButton.astro';
 import GlowBlob from '../components/GlowBlob.astro';
+import Marquee from '../components/Marquee.astro';
 
 const featured = (await getCollection('work', ({ data }) => data.featured && !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
 );
+
+const proofs = [
+  {
+    icon: 'spark',
+    text: 'Ten years of digital product design — the last six focused entirely on design systems.',
+  },
+  {
+    icon: 'layers',
+    text: 'Systems in production for retail, fintech, health and mobility — from 1 brand to 12.',
+  },
+  {
+    icon: 'shield',
+    text: 'WCAG 2.2 AA as a default, verified by independent audits — not as a retrofit.',
+  },
+];
+
+const engagements = [
+  {
+    num: '01',
+    title: 'End-to-end system build',
+    text: 'I take a design system from zero to adopted — discovery, token architecture, component library, documentation and launch.',
+    points: [
+      'Token architecture & multi-brand theming',
+      'Component specs with accessibility acceptance criteria',
+      'Figma library, variables & code handoff',
+      'Documentation & governance setup',
+    ],
+  },
+  {
+    num: '02',
+    title: 'Embedded systems lead',
+    text: 'I join your team to run an existing system as a product — fixing governance, contribution and adoption where they stall.',
+    points: [
+      'Contribution model & review SLAs',
+      'Accessibility audits & remediation',
+      'Adoption metrics & leadership reporting',
+      'Coaching for product designers',
+    ],
+  },
+];
+
+const faqs = [
+  {
+    q: 'Do you only build new design systems?',
+    a: 'No — about half of my work is on systems that already exist. Audits, token migrations, governance rescue and accessibility uplifts are just as common as greenfield builds, and usually more valuable.',
+  },
+  {
+    q: 'How does an engagement usually start?',
+    a: 'With a short, fixed-scope audit: I read the system, the codebase touchpoints and the team setup, then come back with a concrete assessment of what to systematize, what to leave alone, and what it will take. From there we decide the engagement model together.',
+  },
+  {
+    q: 'Do you work hands-on in Figma and code?',
+    a: 'Yes. I build the Figma libraries and variable structures myself, and I define tokens and component APIs together with the engineers who implement them. A system designed away from the code rarely survives contact with it.',
+  },
+  {
+    q: 'How do you measure whether a system works?',
+    a: 'Adoption, not component count: the share of product UI built from the system, contribution lead time, defect rates on themed surfaces, and how long it takes a new team to ship with it. If those numbers don’t move, the system isn’t working — however polished the library looks.',
+  },
+];
 
 const principles = [
   {
@@ -47,6 +107,37 @@ const principles = [
     </div>
   </section>
 
+  <section class="container proof-section" aria-label="Credentials" data-reveal>
+    <ul role="list" class="proof-cards">
+      {
+        proofs.map((proof, i) => (
+          <li class="proof-card" data-reveal-item style={`--index: ${i}`}>
+            <span class="proof-icon" aria-hidden="true">
+              {proof.icon === 'spark' && (
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+                  <path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2Z" fill="currentColor" />
+                </svg>
+              )}
+              {proof.icon === 'layers' && (
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+                  <path d="m12 3 9 5-9 5-9-5 9-5Z" fill="currentColor" />
+                  <path d="m4.5 12.6 7.5 4.2 7.5-4.2M4.5 16.6l7.5 4.2 7.5-4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              )}
+              {proof.icon === 'shield' && (
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+                  <path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z" fill="currentColor" />
+                  <path d="m8.5 12 2.5 2.5L15.5 9.5" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              )}
+            </span>
+            <p class="proof-text">{proof.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
   <section class="container work-section" id="featured" aria-labelledby="featured-heading" data-reveal>
     <div class="section-head" data-reveal-item style="--index: 0">
       <h2 id="featured-heading" class="display section-title">Work</h2>
@@ -70,6 +161,46 @@ const principles = [
     </div>
   </section>
 
+  <section class="engagement-section" aria-labelledby="engagement-heading">
+    <div class="marquee-head" aria-hidden="true">
+      <Marquee items={['Ways to work together']} size="xl" borderless />
+    </div>
+    <div class="container" data-reveal>
+      <h2 id="engagement-heading" class="visually-hidden">Ways to work together</h2>
+      <p class="engagement-intro" data-reveal-item style="--index: 0">
+        Two engagement models, depending on where your system stands — both end with a team that
+        can run it without me.
+      </p>
+      <div class="engagement-grid">
+        {
+          engagements.map((model, i) => (
+            <article class="engagement-card" data-reveal-item style={`--index: ${i + 1}`}>
+              <header class="engagement-head">
+                <h3>{model.title}</h3>
+                <p class="engagement-num" aria-hidden="true">{model.num}</p>
+              </header>
+              <p class="engagement-text">{model.text}</p>
+              <ul role="list" class="engagement-points">
+                {
+                  model.points.map((point) => (
+                    <li>
+                      <span class="point-check" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" width="11" height="11" fill="none">
+                          <path d="m3 8.5 3.5 3.5L13 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                      {point}
+                    </li>
+                  ))
+                }
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   <section class="container principles-section" aria-labelledby="principles-heading" data-reveal>
     <h2 id="principles-heading" class="display section-title" data-reveal-item style="--index: 0">
       How I work
@@ -86,7 +217,38 @@ const principles = [
       }
     </ul>
   </section>
+
+  <section class="container faq-section" aria-labelledby="faq-heading" data-reveal>
+    <h2 id="faq-heading" class="display section-title" data-reveal-item style="--index: 0">FAQ</h2>
+    <div class="faq-list">
+      {
+        faqs.map((faq, i) => (
+          <details class="faq-item" data-reveal-item style={`--index: ${i + 1}`}>
+            <summary class="faq-q">
+              <span>{faq.q}</span>
+              <span class="faq-icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+                  <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </span>
+            </summary>
+            <p class="faq-a">{faq.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
 </BaseLayout>
+
+<script>
+  // One FAQ open at a time — purely an enhancement, <details> works without it.
+  const items = document.querySelectorAll<HTMLDetailsElement>('.faq-item');
+  items.forEach((item) => {
+    item.addEventListener('toggle', () => {
+      if (item.open) items.forEach((other) => other !== item && (other.open = false));
+    });
+  });
+</script>
 
 <style>
   .hero {
@@ -118,8 +280,195 @@ const principles = [
   }
 
   .work-section,
-  .principles-section {
+  .principles-section,
+  .faq-section {
     padding-block-start: var(--space-6xl);
+  }
+
+  /* Proof strip */
+  .proof-section {
+    padding-block-start: var(--space-3xl);
+  }
+
+  .proof-cards {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 48rem) {
+    .proof-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .proof-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    min-block-size: 9rem;
+    padding: var(--space-lg);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-2xl);
+  }
+
+  .proof-icon {
+    color: var(--color-text);
+  }
+
+  .proof-text {
+    max-width: 34ch;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  /* Engagement models */
+  .engagement-section {
+    padding-block-start: var(--space-6xl);
+  }
+
+  .marquee-head {
+    margin-block-end: var(--space-2xl);
+  }
+
+  .engagement-intro {
+    max-width: 48ch;
+    margin-block-end: var(--space-2xl);
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .engagement-grid {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 48rem) {
+    .engagement-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .engagement-card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-2xl);
+  }
+
+  .engagement-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+
+  .engagement-head h3 {
+    font-size: var(--text-2xl);
+  }
+
+  .engagement-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .engagement-text {
+    max-width: 44ch;
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .engagement-points {
+    display: grid;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-sm);
+  }
+
+  .engagement-points li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    font-weight: 550;
+  }
+
+  .point-check {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-full);
+  }
+
+  /* FAQ */
+  .faq-list {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: 52rem;
+    margin-block-start: var(--space-2xl);
+  }
+
+  .faq-item {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 2rem;
+    block-size: 2rem;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-full);
+    transition:
+      rotate var(--duration-slow) var(--ease-out-cubic),
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .faq-item[open] .faq-icon {
+    rotate: 45deg;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .faq-q:hover .faq-icon {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .faq-a {
+    max-width: 60ch;
+    padding: 0 var(--space-lg) var(--space-lg);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
   }
 
   .work-section .section-head {

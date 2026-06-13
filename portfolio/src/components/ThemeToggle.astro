@@ -59,19 +59,26 @@
 </style>
 
 <script>
-  const toggle = document.querySelector('[data-theme-toggle]');
   const root = document.documentElement;
 
   const isDark = () =>
     root.dataset.theme === 'dark' ||
     (!root.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-  toggle?.setAttribute('aria-pressed', String(isDark()));
-
-  toggle?.addEventListener('click', () => {
+  // Delegated + attached once: the router renders a fresh button on every page,
+  // but `document` persists, so this keeps working without re-binding.
+  document.addEventListener('click', (event) => {
+    const toggle = (event.target as Element).closest('[data-theme-toggle]');
+    if (!toggle) return;
     const next = isDark() ? 'light' : 'dark';
     root.dataset.theme = next;
     localStorage.setItem('theme', next);
     toggle.setAttribute('aria-pressed', String(next === 'dark'));
   });
+
+  // Sync the pressed state on first load and after each navigation.
+  const sync = () =>
+    document.querySelector('[data-theme-toggle]')?.setAttribute('aria-pressed', String(isDark()));
+  sync();
+  document.addEventListener('astro:page-load', sync);
 </script>

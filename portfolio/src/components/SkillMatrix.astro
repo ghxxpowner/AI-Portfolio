@@ -1,0 +1,154 @@
+---
+interface Skill {
+  area: string;
+  detail: string;
+  /** 0–100 */
+  level: number;
+  /** Optional text shown instead of the raw percentage, e.g. "Expert". */
+  levelLabel?: string;
+}
+
+interface Props {
+  skills: Skill[];
+}
+
+const { skills } = Astro.props;
+---
+
+<ul role="list" class="skill-matrix" data-reveal>
+  {
+    skills.map((skill, i) => (
+      <li
+        class="skill-card"
+        data-reveal-item
+        data-spotlight
+        style={`--index: ${i}; --level-pct: ${skill.level}%`}
+      >
+        <div class="skill-top">
+          <h3 class="skill-area">{skill.area}</h3>
+          <span class="skill-level-label">{skill.levelLabel ?? `${skill.level}%`}</span>
+        </div>
+        <p class="skill-detail">{skill.detail}</p>
+        <div
+          class="skill-meter"
+          role="meter"
+          aria-valuenow={skill.level}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${skill.area} proficiency`}
+        >
+          <span class="skill-meter-fill" aria-hidden="true" />
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .skill-matrix {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+    gap: var(--space-md);
+    margin: 0;
+  }
+
+  .skill-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-content: start;
+    gap: var(--space-sm);
+    padding: var(--space-xl);
+    background-color: var(--color-surface);
+    border: var(--border-hairline);
+    border-radius: var(--radius-xl);
+    transition:
+      border-color var(--duration-quick) var(--ease-out-cubic),
+      translate var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  /* Pointer spotlight — JS writes --mx/--my; falls back to a centered glow. */
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    background: radial-gradient(
+      16rem circle at var(--mx, 50%) var(--my, 50%),
+      var(--color-accent-glow),
+      transparent 60%
+    );
+    transition: opacity var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .skill-card:hover,
+  .skill-card:focus-within {
+    border-color: var(--color-accent);
+    translate: 0 -4px;
+  }
+
+  .skill-card:hover::before,
+  .skill-card:focus-within::before {
+    opacity: var(--glow-opacity);
+  }
+
+  .skill-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .skill-area {
+    font-size: var(--text-lg);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .skill-level-label {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .skill-detail {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  .skill-meter {
+    margin-block-start: var(--space-xs);
+    block-size: 0.5rem;
+    background-color: var(--color-bg-subtle);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .skill-meter-fill {
+    display: block;
+    block-size: 100%;
+    inline-size: var(--level-pct);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-full);
+  }
+
+  /* Meter is full by default (no-JS / reduced-motion safe); only animates from
+     zero when JS runs and motion is allowed. Staggered with the card index. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .skill-meter-fill {
+      inline-size: 0;
+      transition: inline-size var(--duration-reveal) var(--ease-out-cubic);
+      transition-delay: calc(var(--index, 0) * 90ms + 200ms);
+    }
+
+    :global(html.js) .skill-matrix.is-visible .skill-meter-fill {
+      inline-size: var(--level-pct);
+    }
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  /** Drop a real headshot in src/assets/ and pass the import here to replace the placeholder. */
+  src?: ImageMetadata;
+  alt?: string;
+  /** Used for the monogram and the placeholder's aria-label. */
+  name: string;
+}
+
+const { src, alt, name } = Astro.props;
+
+const initials = name
+  .split(/\s+/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((part) => part[0]?.toUpperCase() ?? '')
+  .join('');
+---
+
+<figure class="portrait">
+  {
+    src ? (
+      <Image
+        class="portrait-photo"
+        src={src}
+        alt={alt ?? name}
+        widths={[400, 700, 1000]}
+        sizes="(max-width: 48rem) 80vw, 24rem"
+        loading="eager"
+        fetchpriority="high"
+      />
+    ) : (
+      <div class="portrait-placeholder" role="img" aria-label={`Portrait of ${name}`}>
+        <span class="portrait-glow" aria-hidden="true" />
+        <span class="portrait-monogram" aria-hidden="true">
+          {initials}
+        </span>
+        <span class="portrait-spark" aria-hidden="true" />
+      </div>
+    )
+  }
+</figure>
+
+<style>
+  .portrait {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background-color: var(--color-surface);
+    border: var(--border-hairline);
+  }
+
+  .portrait-photo {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /* Placeholder — a designed monogram tile until a real photo is dropped in. */
+  .portrait-placeholder {
+    position: relative;
+    display: grid;
+    place-items: center;
+    inline-size: 100%;
+    block-size: 100%;
+    background:
+      radial-gradient(circle at 70% 18%, var(--color-bg-subtle), transparent 60%),
+      var(--color-surface);
+    isolation: isolate;
+  }
+
+  .portrait-glow {
+    position: absolute;
+    inset-block-start: -30%;
+    inset-inline-end: -30%;
+    inline-size: 80%;
+    block-size: 80%;
+    z-index: -1;
+    background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 65%);
+    opacity: var(--glow-opacity);
+  }
+
+  .portrait-monogram {
+    font-size: clamp(4rem, 14vw, 9rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-text);
+  }
+
+  .portrait-spark {
+    position: absolute;
+    inset-block-end: 12%;
+    inset-inline-start: 12%;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    background-color: var(--color-accent);
+    border-radius: 4px;
+    rotate: 45deg;
+  }
+</style>

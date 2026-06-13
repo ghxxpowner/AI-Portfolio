@@ -4,7 +4,12 @@ import { reducedMotion } from './motion';
 // Without JS (or with reduced motion) every element stays fully visible.
 document.documentElement.classList.add('js');
 
-if (!reducedMotion.matches) {
+// Build a fresh observer for the current page's elements. After a router swap
+// the previous page's observer and its (now-detached) targets are GC'd.
+function init() {
+  document.documentElement.classList.add('js');
+  if (reducedMotion.matches) return;
+
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -19,3 +24,6 @@ if (!reducedMotion.matches) {
 
   document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
 }
+
+// Fires on the initial load and after every client-side navigation.
+document.addEventListener('astro:page-load', init);

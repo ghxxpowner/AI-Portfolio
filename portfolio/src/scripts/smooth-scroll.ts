@@ -20,5 +20,12 @@ function stop() {
   lenis = null;
 }
 
-if (!reducedMotion.matches) start();
+// Tear the Lenis instance + rAF loop down before the router swaps the body,
+// then spin up a fresh one for the new page. Without this the loop leaks and
+// drives a detached document.
+document.addEventListener('astro:before-swap', stop);
+document.addEventListener('astro:page-load', () => {
+  if (!reducedMotion.matches) start();
+});
+
 reducedMotion.addEventListener('change', (e) => (e.matches ? stop() : start()));

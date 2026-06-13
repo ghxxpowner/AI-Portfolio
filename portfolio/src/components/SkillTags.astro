@@ -1,0 +1,104 @@
+---
+type IconName = 'camera' | 'bike' | 'coffee' | 'climb' | 'music' | 'globe' | 'book' | 'plant';
+
+interface Tag {
+  label: string;
+  icon?: IconName;
+}
+
+interface Props {
+  items: Tag[];
+}
+
+const { items } = Astro.props;
+
+// Minimal 24×24 stroke glyphs, keyed by name. Anything unknown falls back to the
+// neon spark so the badge still reads as part of the set.
+const icons: Record<IconName, string> = {
+  camera: 'M3 8a2 2 0 0 1 2-2h2l1.5-2h7L19 6h0a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Zm9 9a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z',
+  bike: 'M6.5 18a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm11 0a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM6.5 14.5l4-6h4l3 6m-7-6L9 5H7',
+  coffee: 'M4 8h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8Zm12 1h2a2 2 0 0 1 0 4h-2M7 3c0 1-1 1-1 2m4-2c0 1-1 1-1 2',
+  climb: 'M4 20l4-9 4 3 3-7 5 13M9 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
+  music: 'M9 18V6l10-2v12M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm10-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+  globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0c2.5-2.5 3.5-5.6 3.5-9S14.5 5.5 12 3m0 18c-2.5-2.5-3.5-5.6-3.5-9S9.5 5.5 12 3M3.5 9h17m-17 6h17',
+  book: 'M4 5a2 2 0 0 1 2-2h6v16H6a2 2 0 0 0-2 2V5Zm16 0a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 1 2 2V5Z',
+  plant: 'M12 21v-7m0 0c0-3 2.5-5.5 6-6-0.5 3.5-3 6-6 6Zm0 0c0-3-2.5-5.5-6-6 .5 3.5 3 6 6 6Z',
+};
+---
+
+<ul role="list" class="skill-tags" data-reveal>
+  {
+    items.map((item, i) => (
+      <li class="tag" data-reveal-item style={`--index: ${i}`}>
+        <span class="tag-icon" aria-hidden="true">
+          {item.icon ? (
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d={icons[item.icon]} />
+            </svg>
+          ) : (
+            <span class="tag-spark" />
+          )}
+        </span>
+        <span class="tag-label">{item.label}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: var(--border-hairline);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic),
+      border-color var(--duration-quick) var(--ease-out-cubic),
+      translate var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .tag:hover {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+    border-color: var(--color-accent);
+    translate: 0 -3px;
+  }
+
+  .tag-icon {
+    display: grid;
+    place-items: center;
+    color: var(--color-text-muted);
+    transition: color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .tag:hover .tag-icon {
+    color: var(--color-on-accent);
+  }
+
+  .tag-spark {
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    background-color: var(--color-accent);
+    border-radius: 2px;
+    rotate: 45deg;
+  }
+
+  .tag:hover .tag-spark {
+    background-color: var(--color-on-accent);
+  }
+</style>

@@ -5,6 +5,7 @@ import '../styles/reset.css';
 import '../styles/global.css';
 import '../styles/motion.css';
 
+import { ClientRouter } from 'astro:transitions';
 import Seo from '../components/Seo.astro';
 import SkipLink from '../components/SkipLink.astro';
 import Header from '../components/Header.astro';
@@ -42,7 +43,17 @@ const { title, description, ogImage, type } = Astro.props;
       ) {
         document.documentElement.dataset.preload = '';
       }
+      // The router swaps in a fresh document whose <html> carries none of the
+      // attributes/classes JS applied. Re-apply theme and the `js` gate before
+      // paint so neither flashes mid-transition.
+      document.addEventListener('astro:after-swap', () => {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        else delete document.documentElement.dataset.theme;
+        document.documentElement.classList.add('js');
+      });
     </script>
+    <ClientRouter />
     <Seo {title} {description} {ogImage} {type} />
     <slot name="head" />
   </head>
@@ -59,6 +70,7 @@ const { title, description, ogImage, type } = Astro.props;
       import '../scripts/split-text';
       import '../scripts/reveal';
       import '../scripts/smooth-scroll';
+      import '../scripts/resume';
     </script>
   </body>
 </html>

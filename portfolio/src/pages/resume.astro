@@ -1,0 +1,279 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GlowBlob from '../components/GlowBlob.astro';
+import PillButton from '../components/PillButton.astro';
+import StatCards from '../components/StatCards.astro';
+import AvatarPortrait from '../components/AvatarPortrait.astro';
+import Timeline from '../components/Timeline.astro';
+import SkillMatrix from '../components/SkillMatrix.astro';
+import SkillTags from '../components/SkillTags.astro';
+
+// Real numbers, shared with the About page.
+const bigStats = [
+  { value: '10+', label: 'years in digital product design', variant: 'surface' as const },
+  { value: '12', label: 'brands carried by one design system', variant: 'gradient' as const },
+  { value: '23', label: 'product squads shipping on my systems', variant: 'ink' as const },
+  { value: 'AA', label: 'WCAG 2.2 — verified by independent audit', variant: 'neon' as const },
+];
+
+// Career history (real), newest first, with the ZDF flagship called out.
+const timeline = [
+  {
+    period: '2022 — today',
+    role: 'Product Designer, Design Systems',
+    org: 'Jakala',
+    detail:
+      'Leading token architecture, component libraries, governance and accessibility for multi-brand, multi-platform products.',
+  },
+  {
+    period: '2024 — 2026',
+    role: 'ZDF DetLines — Design System Architect',
+    org: 'Flagship engagement at Jakala',
+    tag: 'Highlight',
+    href: '/work/zdf-detlines/',
+    detail:
+      "Led the cross-platform design system behind ZDF's 2025 streaming launch — one source of truth across web, mobile and smart TV, six platforms and thirteen breakpoints.",
+  },
+  {
+    period: '2019 — 2022',
+    role: 'Product Designer',
+    org: 'Digital product agency',
+    detail:
+      'Shipped product UI across web and mobile and migrated legacy style guides toward token-based foundations.',
+  },
+  {
+    period: '2016 — 2019',
+    role: 'UI/Visual Designer',
+    org: 'Brand & digital studio',
+    detail: 'Brand systems, visual design and the first component libraries that set me on the systems path.',
+  },
+];
+
+// Professional skills (real capabilities from the About page) + proficiency.
+const skills = [
+  {
+    area: 'Token architecture',
+    detail:
+      'Primitive → semantic → component tiering, naming systems, theming contracts, dark mode and multi-brand strategies.',
+    level: 95,
+    levelLabel: 'Expert',
+  },
+  {
+    area: 'Component design',
+    detail:
+      'Specs that cover behavior, anatomy, accessibility and API — written with the engineers who build them.',
+    level: 92,
+    levelLabel: 'Expert',
+  },
+  {
+    area: 'Accessibility',
+    detail:
+      'WCAG 2.2 AA as a system property: contrast-verified ramps, focus standards, executable acceptance criteria.',
+    level: 90,
+    levelLabel: 'Expert',
+  },
+  {
+    area: 'Governance & adoption',
+    detail:
+      'Contribution models, review SLAs, lifecycle states and adoption instrumentation that make systems self-sustaining.',
+    level: 88,
+    levelLabel: 'Advanced',
+  },
+  {
+    area: 'Design–code workflow',
+    detail:
+      'Figma library architecture, variables, Code Connect and the handoff rituals that keep both sources of truth honest.',
+    level: 85,
+    levelLabel: 'Advanced',
+  },
+  {
+    area: 'Systems strategy',
+    detail:
+      'Making the business case: what to systematize, what to leave alone, and how to report value to leadership.',
+    level: 80,
+    levelLabel: 'Advanced',
+  },
+];
+
+// Private skills — realistic placeholders, easy to edit.
+const privateSkills = [
+  { label: 'Photography', icon: 'camera' as const },
+  { label: 'Road cycling', icon: 'bike' as const },
+  { label: 'Specialty coffee', icon: 'coffee' as const },
+  { label: 'Bouldering', icon: 'climb' as const },
+  { label: 'Vinyl & synths', icon: 'music' as const },
+  { label: 'Travel & languages', icon: 'globe' as const },
+  { label: 'Design literature', icon: 'book' as const },
+  { label: 'Urban gardening', icon: 'plant' as const },
+];
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'Daniel Klinke',
+    jobTitle: 'Product Designer, Design Systems',
+    url: 'https://danielklinke.design',
+    sameAs: ['https://www.linkedin.com/in/danielklinke'],
+    knowsAbout: skills.map((s) => s.area),
+  },
+});
+---
+
+<BaseLayout
+  title="Resume"
+  description="The interactive resume of Daniel Klinke — career timeline, design-systems skills and the person behind the work."
+>
+  <script type="application/ld+json" set:html={jsonLd} slot="head" />
+  <div class="container">
+    <!-- Intro / profile -->
+    <header class="intro" data-reveal>
+      <GlowBlob size="40rem" top="-18rem" left="-14rem" />
+      <div class="intro-text">
+        <p class="eyebrow" data-reveal-item style="--index: 0">Product Designer · Design Systems</p>
+        <h1 class="display" data-split="chars">Daniel Klinke</h1>
+        <div class="intro-bio flow" data-split="lines">
+          <p>
+            I design the tokens, components, documentation and governance that let many teams ship
+            one coherent product — and I care most about whether those systems actually get adopted.
+          </p>
+          <p>
+            Based in Germany, working with teams worldwide. Below: how I got here, what I'm deep in,
+            and a little of who I am away from the canvas.
+          </p>
+        </div>
+        <div class="intro-actions" data-reveal-item style="--index: 4">
+          <PillButton href="mailto:hello@danielklinke.design">Get in touch</PillButton>
+          <PillButton href="/work/" variant="ghost">See the work</PillButton>
+        </div>
+      </div>
+      <div class="intro-portrait" data-reveal-item style="--index: 3">
+        <AvatarPortrait name="Daniel Klinke" />
+      </div>
+    </header>
+
+    <!-- Key numbers -->
+    <section class="block" aria-label="Key numbers" data-reveal>
+      <StatCards stats={bigStats} />
+    </section>
+
+    <!-- Career timeline -->
+    <section class="block" aria-labelledby="timeline-heading">
+      <div data-reveal>
+        <h2 id="timeline-heading" class="display section-title" data-reveal-item style="--index: 0">
+          Career
+        </h2>
+        <p class="section-sub" data-reveal-item style="--index: 1">
+          A decade moving from visual craft toward the systems that scale it.
+        </p>
+      </div>
+      <Timeline entries={timeline} />
+    </section>
+
+    <!-- Professional skills -->
+    <section class="block" aria-labelledby="skills-heading">
+      <div data-reveal>
+        <h2 id="skills-heading" class="display section-title" data-reveal-item style="--index: 0">
+          What I'm deep in
+        </h2>
+        <p class="section-sub" data-reveal-item style="--index: 1">
+          Hover a card to bring it forward. The meters are a rough read on where I spend my craft.
+        </p>
+      </div>
+      <SkillMatrix {skills} />
+    </section>
+
+    <!-- Private skills -->
+    <section class="block" aria-labelledby="private-heading">
+      <div data-reveal>
+        <h2 id="private-heading" class="display section-title" data-reveal-item style="--index: 0">
+          Away from the screen
+        </h2>
+        <p class="section-sub" data-reveal-item style="--index: 1">
+          The interests that keep my eye fresh and my weekends full.
+        </p>
+      </div>
+      <SkillTags items={privateSkills} />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .intro {
+    position: relative;
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+    padding-block: var(--space-4xl) var(--space-3xl);
+  }
+
+  @media (min-width: 52rem) {
+    .intro {
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-3xl);
+    }
+  }
+
+  .intro-text {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  h1 {
+    font-size: var(--text-display);
+  }
+
+  .eyebrow {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .intro-bio {
+    max-width: var(--measure);
+  }
+
+  .intro-bio p {
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+  }
+
+  .intro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-xs);
+  }
+
+  .intro-portrait {
+    max-width: 24rem;
+    inline-size: 100%;
+    justify-self: center;
+  }
+
+  @media (min-width: 52rem) {
+    .intro-portrait {
+      justify-self: end;
+    }
+  }
+
+  .block {
+    padding-block: var(--space-3xl);
+  }
+
+  .section-title {
+    font-size: var(--text-3xl);
+    margin-block-end: var(--space-sm);
+  }
+
+  .section-sub {
+    max-width: var(--measure);
+    margin-block-end: var(--space-2xl);
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+</style>

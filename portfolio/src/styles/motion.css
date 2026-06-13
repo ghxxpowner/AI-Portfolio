@@ -89,3 +89,35 @@
     }
   }
 }
+
+/* ==========================================================================
+   Page transitions (View Transitions API via the router)
+   --------------------------------------------------------------------------
+   A plain opacity crossfade: the outgoing page fades out while the incoming
+   one fades in. Overrides the router's default slide. Disabled under reduced
+   motion, where the swap is instant.
+   ========================================================================== */
+
+::view-transition-old(root) {
+  animation: vt-fade 280ms var(--ease-out-cubic) both reverse;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade 280ms var(--ease-out-cubic) both;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

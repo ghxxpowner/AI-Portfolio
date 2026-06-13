@@ -1,0 +1,174 @@
+---
+interface Entry {
+  period: string;
+  role: string;
+  org: string;
+  detail?: string;
+  tag?: string;
+  href?: string;
+}
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<ol class="timeline" data-reveal>
+  <span class="timeline-line" aria-hidden="true">
+    <span class="timeline-line-fill"></span>
+  </span>
+  {
+    entries.map((entry, i) => (
+      <li class="tl-item" data-reveal-item style={`--index: ${i}`}>
+        <span class="tl-dot" aria-hidden="true" />
+        <div class="tl-card">
+          <div class="tl-head">
+            <span class="tl-period">{entry.period}</span>
+            {entry.tag && <span class="tl-tag">{entry.tag}</span>}
+          </div>
+          <h3 class="tl-role">
+            {entry.href ? <a href={entry.href}>{entry.role}</a> : entry.role}
+          </h3>
+          <p class="tl-org">{entry.org}</p>
+          {entry.detail && <p class="tl-detail">{entry.detail}</p>}
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .timeline {
+    position: relative;
+    display: grid;
+    gap: var(--space-xl);
+    margin: 0;
+    padding: 0;
+    padding-inline-start: var(--space-2xl);
+    list-style: none;
+  }
+
+  /* The rail the dots sit on, plus its drawn fill. */
+  .timeline-line {
+    position: absolute;
+    inset-block: 0.6rem 0.6rem;
+    inset-inline-start: 0.45rem;
+    inline-size: 2px;
+    background-color: var(--color-border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .timeline-line-fill {
+    position: absolute;
+    inset: 0;
+    transform-origin: top center;
+    background-color: var(--color-accent);
+  }
+
+  .tl-item {
+    position: relative;
+  }
+
+  .tl-dot {
+    position: absolute;
+    inset-block-start: 0.45rem;
+    inset-inline-start: calc(var(--space-2xl) * -1);
+    inline-size: 1rem;
+    block-size: 1rem;
+    background-color: var(--color-accent);
+    border: 2px solid var(--color-bg);
+    border-radius: var(--radius-full);
+  }
+
+  .tl-card {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-lg) var(--space-xl);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  .tl-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .tl-period {
+    inline-size: fit-content;
+    padding: var(--space-2xs) var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border-radius: var(--radius-full);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .tl-tag {
+    padding: var(--space-2xs) var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-full);
+  }
+
+  .tl-role {
+    font-size: var(--text-xl);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .tl-role a {
+    color: inherit;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .tl-role a:hover {
+    color: var(--color-text-muted);
+  }
+
+  .tl-org {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .tl-detail {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  /* The fill is full by default (no-JS / reduced-motion safe) and only animates
+     from empty when JS runs and motion is allowed — matching the site contract. */
+  .timeline-line-fill {
+    transform: scaleY(1);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .timeline-line-fill {
+      transform: scaleY(0);
+      transition: transform var(--duration-reveal) var(--ease-out-cubic) 150ms;
+    }
+
+    :global(html.js) .timeline.is-visible .timeline-line-fill {
+      transform: scaleY(1);
+    }
+  }
+</style>

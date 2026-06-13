@@ -36,7 +36,25 @@ function splitLines(el: HTMLElement) {
   });
 }
 
-if (!reducedMotion.matches) {
-  document.querySelectorAll<HTMLElement>('[data-split="chars"]').forEach(splitChars);
-  document.querySelectorAll<HTMLElement>('[data-split="lines"]').forEach(splitLines);
+function init() {
+  if (reducedMotion.matches) return;
+  // Guard against re-processing the same element (e.g. a double-fired event).
+  // A fresh page after a router swap brings unprocessed elements, so the
+  // marker is per-element, not global.
+  document.querySelectorAll<HTMLElement>('[data-split="chars"]').forEach((el) => {
+    if (el.dataset.splitDone) return;
+    splitChars(el);
+    el.dataset.splitDone = '';
+  });
+  document.querySelectorAll<HTMLElement>('[data-split="lines"]').forEach((el) => {
+    if (el.dataset.splitDone) return;
+    splitLines(el);
+    el.dataset.splitDone = '';
+  });
 }
+
+// Split immediately on first load (before paint) so headings never flash as
+// plain text; the per-element guard makes the duplicate astro:page-load call
+// on initial load a no-op. Subsequent swaps are handled by the event only.
+init();
+document.addEventListener('astro:page-load', init);

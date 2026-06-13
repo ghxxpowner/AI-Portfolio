@@ -15,6 +15,7 @@ const kind = discipline[0];
 ---
 
 <article class:list={['project-card', { 'is-featured': featured }]}>
+  <a class="card-link" href={`/work/${entry.id}/`} aria-label={title}></a>
   <div class="card-visual">
     {
       heroImage ? (
@@ -43,9 +44,7 @@ const kind = discipline[0];
   <div class="card-overlay">
     <div class="card-id">
       <p class="eyebrow card-meta">{client} · {year}</p>
-      <Heading class="card-title">
-        <a href={`/work/${entry.id}/`}>{title}</a>
-      </Heading>
+      <Heading class="card-title">{title}</Heading>
     </div>
     <span class="card-kind">{kind}</span>
   </div>
@@ -62,6 +61,19 @@ const kind = discipline[0];
 
   .is-featured {
     aspect-ratio: 16 / 9;
+  }
+
+  /* Full-bleed link: the whole card is the click target */
+  .card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+  }
+
+  .card-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
   }
 
   @media (max-width: 40rem) {
@@ -99,9 +111,8 @@ const kind = discipline[0];
 
   .glass-arrow {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
+    top: var(--space-lg);
+    right: var(--space-lg);
     display: grid;
     place-items: center;
     inline-size: 3.5rem;
@@ -112,6 +123,7 @@ const kind = discipline[0];
     border-radius: var(--radius-full);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    pointer-events: none;
     opacity: 0;
     scale: 0.85;
     transition:
@@ -133,6 +145,8 @@ const kind = discipline[0];
     justify-content: space-between;
     gap: var(--space-md);
     padding: var(--space-lg);
+    /* Decorative only — the full-card .card-link sits above and takes the clicks */
+    pointer-events: none;
   }
 
   .card-id {
@@ -154,17 +168,6 @@ const kind = discipline[0];
     font-size: var(--text-2xl);
   }
 
-  /* Whole card is clickable; the title stays the only real link */
-  .card-title a {
-    text-decoration: none;
-  }
-
-  .card-title a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-
   .card-kind {
     flex-shrink: 0;
     padding: var(--space-xs) var(--space-md);
@@ -177,15 +180,6 @@ const kind = discipline[0];
     border-radius: var(--radius-full);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    transition:
-      background-color var(--duration-quick) var(--ease-out-cubic),
-      color var(--duration-quick) var(--ease-out-cubic);
-  }
-
-  .project-card:hover .card-kind {
-    background-color: var(--color-accent);
-    color: var(--color-on-accent);
-    border-color: transparent;
   }
 
   @media (max-width: 28rem) {

@@ -12,6 +12,9 @@ import TokenTable from '../components/TokenTable.astro';
 import MetaGrid from '../components/MetaGrid.astro';
 import Marquee from '../components/Marquee.astro';
 import StatCards from '../components/StatCards.astro';
+import Timeline from '../components/Timeline.astro';
+import SkillMatrix from '../components/SkillMatrix.astro';
+import SkillTags from '../components/SkillTags.astro';
 
 const [sampleEntry] = (await getCollection('work', ({ data }) => data.featured)).sort(
   (a, b) => a.data.order - b.data.order
@@ -48,6 +51,7 @@ const sections = [
   { id: 'buttons', label: 'Buttons' },
   { id: 'cards', label: 'Cards' },
   { id: 'artifacts', label: 'Artifacts' },
+  { id: 'resume-blocks', label: 'Resume' },
   { id: 'motion', label: 'Motion' },
 ];
 ---
@@ -233,6 +237,56 @@ const sections = [
             { name: '--duration-reveal', value: '1000ms', usage: 'Scroll reveals, split text' },
             { name: 'char stagger', value: '20ms', usage: 'Per character in split headings' },
             { name: 'line stagger', value: '50ms', usage: 'Per line in split paragraphs' },
+          ]}
+        />
+      </div>
+    </section>
+
+    <!-- Resume blocks -->
+    <section class="sg-block" id="resume-blocks" aria-labelledby="resume-blocks-h" data-reveal>
+      <h2 id="resume-blocks-h" class="display sg-title" data-reveal-item style="--index: 0">
+        Resume blocks
+      </h2>
+      <p class="sg-note" data-reveal-item style="--index: 1">
+        The interactive pieces of the <a href="/resume/">Resume</a> page. The timeline rail draws as
+        the section reveals; skill meters fill from zero with the same <code>--index</code> stagger
+        and a pointer spotlight on hover; private skills are neon-inverting badges. All honor the
+        reduced-motion and no-JS contract — meters and rail simply render full.
+      </p>
+      <div class="resume-stack" data-reveal-item style="--index: 2">
+        <Timeline
+          entries={[
+            { period: '2022 — today', role: 'Product Designer, Design Systems', org: 'Jakala' },
+            {
+              period: '2024 — 2026',
+              role: 'ZDF DetLines — Design System Architect',
+              org: 'Flagship engagement',
+              tag: 'Highlight',
+              href: '/work/zdf-detlines/',
+            },
+          ]}
+        />
+        <SkillMatrix
+          skills={[
+            {
+              area: 'Token architecture',
+              detail: 'Primitive → semantic → component tiering and theming contracts.',
+              level: 95,
+              levelLabel: 'Expert',
+            },
+            {
+              area: 'Governance & adoption',
+              detail: 'Contribution models and adoption instrumentation.',
+              level: 88,
+              levelLabel: 'Advanced',
+            },
+          ]}
+        />
+        <SkillTags
+          items={[
+            { label: 'Photography', icon: 'camera' },
+            { label: 'Road cycling', icon: 'bike' },
+            { label: 'Specialty coffee', icon: 'coffee' },
           ]}
         />
       </div>
@@ -445,6 +499,11 @@ const sections = [
   .artifact-stack {
     display: grid;
     gap: var(--space-xl);
+  }
+
+  .resume-stack {
+    display: grid;
+    gap: var(--space-2xl);
   }
 
   /* Motion demo */

@@ -25,6 +25,7 @@ The four case studies are realistic placeholders. Each one is **a single MDX fil
    - `<Callout>` — decision/trade-off asides
    - `<StatRow>` / `<PullQuote>` — metrics and quotes
 4. Set `featured: true` and an `order` to control the homepage and sorting.
+5. Real project imagery: drop files into `src/assets/work/<slug>/`, set `heroImage` in the frontmatter (replaces the SVG artwork in the hero and on project cards) and embed body images via `<Figure>` + `<Image>` — Astro generates optimized responsive WebP at build time.
 
 Hero artwork is keyed by the `artwork` frontmatter field (`multi-brand | tokens | governance | a11y`). To add a new one, create a component in `src/components/artwork/`, register it in `Artwork.astro`, and extend the enum in `content.config.ts`.
 

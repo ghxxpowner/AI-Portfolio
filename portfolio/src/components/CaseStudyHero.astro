@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import MetaGrid from './MetaGrid.astro';
 import Artwork from './artwork/Artwork.astro';
 import GlowBlob from './GlowBlob.astro';
@@ -9,7 +10,8 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, summary, client, year, role, team, timeline, platform, artwork } = entry.data;
+const { title, summary, client, year, role, team, timeline, platform, artwork, heroImage } =
+  entry.data;
 
 const meta = [
   { term: 'Role', detail: role },
@@ -28,7 +30,21 @@ const meta = [
     <MetaGrid items={meta} />
   </div>
   <div data-reveal-item style="--index: 4">
-    <Artwork {artwork} />
+    {
+      heroImage ? (
+        <Image
+          class="hero-photo"
+          src={heroImage}
+          alt=""
+          widths={[800, 1400, 2200]}
+          sizes="(max-width: 80rem) 100vw, 75rem"
+          loading="eager"
+          fetchpriority="high"
+        />
+      ) : (
+        <Artwork {artwork} />
+      )
+    }
   </div>
 </header>
 
@@ -52,5 +68,11 @@ const meta = [
     line-height: var(--leading-snug);
     color: var(--color-text-muted);
     text-wrap: pretty;
+  }
+
+  .hero-photo {
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--radius-2xl);
   }
 </style>

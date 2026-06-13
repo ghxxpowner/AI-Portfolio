@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import Artwork from './artwork/Artwork.astro';
 
 interface Props {
@@ -9,13 +10,25 @@ interface Props {
 }
 
 const { entry, headingLevel: Heading = 'h3', featured = false } = Astro.props;
-const { title, client, year, discipline, artwork } = entry.data;
+const { title, client, year, discipline, artwork, heroImage } = entry.data;
 const kind = discipline[0];
 ---
 
 <article class:list={['project-card', { 'is-featured': featured }]}>
   <div class="card-visual">
-    <Artwork {artwork} frameless />
+    {
+      heroImage ? (
+        <Image
+          class="card-photo"
+          src={heroImage}
+          alt=""
+          widths={[700, 1300, 2200]}
+          sizes={featured ? '(max-width: 80rem) 100vw, 75rem' : '(max-width: 48rem) 100vw, 38rem'}
+        />
+      ) : (
+        <Artwork {artwork} frameless />
+      )
+    }
   </div>
   <span class="glass-arrow" aria-hidden="true">
     <svg viewBox="0 0 16 16" width="18" height="18" fill="none">
@@ -62,6 +75,12 @@ const kind = discipline[0];
     position: absolute;
     inset: 0;
     transition: scale 1s var(--ease-out-cubic);
+  }
+
+  .card-visual :global(.card-photo) {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
   }
 
   .project-card:hover .card-visual,

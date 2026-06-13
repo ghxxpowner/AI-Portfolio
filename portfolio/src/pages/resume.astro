@@ -5,7 +5,8 @@ import PillButton from '../components/PillButton.astro';
 import StatCards from '../components/StatCards.astro';
 import AvatarPortrait from '../components/AvatarPortrait.astro';
 import Timeline from '../components/Timeline.astro';
-import SkillMatrix from '../components/SkillMatrix.astro';
+import AreaList from '../components/AreaList.astro';
+import ToolGrid from '../components/ToolGrid.astro';
 import SkillTags from '../components/SkillTags.astro';
 
 // Real numbers, shared with the About page.
@@ -49,50 +50,39 @@ const timeline = [
   },
 ];
 
-// Professional skills (real capabilities from the About page) + proficiency.
-const skills = [
-  {
-    area: 'Token architecture',
-    detail:
-      'Primitive → semantic → component tiering, naming systems, theming contracts, dark mode and multi-brand strategies.',
-    level: 95,
-    levelLabel: 'Expert',
-  },
-  {
-    area: 'Component design',
-    detail:
-      'Specs that cover behavior, anatomy, accessibility and API — written with the engineers who build them.',
-    level: 92,
-    levelLabel: 'Expert',
-  },
-  {
-    area: 'Accessibility',
-    detail:
-      'WCAG 2.2 AA as a system property: contrast-verified ramps, focus standards, executable acceptance criteria.',
-    level: 90,
-    levelLabel: 'Expert',
-  },
-  {
-    area: 'Governance & adoption',
-    detail:
-      'Contribution models, review SLAs, lifecycle states and adoption instrumentation that make systems self-sustaining.',
-    level: 88,
-    levelLabel: 'Advanced',
-  },
-  {
-    area: 'Design–code workflow',
-    detail:
-      'Figma library architecture, variables, Code Connect and the handoff rituals that keep both sources of truth honest.',
-    level: 85,
-    levelLabel: 'Advanced',
-  },
-  {
-    area: 'Systems strategy',
-    detail:
-      'Making the business case: what to systematize, what to leave alone, and how to report value to leadership.',
-    level: 80,
-    levelLabel: 'Advanced',
-  },
+// Areas of specialization — where I've built real expertise.
+const areas = [
+  'Art Direction',
+  'Design Strategy',
+  'Design Systems',
+  'Frontend Development',
+  'GenAI Integration',
+  'Inclusive Design (WCAG)',
+  'Information Architecture',
+  'Interaction Design',
+  'Motion Design',
+  'Product Design (UI/UX)',
+  'Prototyping',
+  'Streaming Platforms',
+  'Typography',
+  'User Research',
+  'Vibe Coding',
+  'Visual Identity',
+];
+
+// Tools & programs I work in day to day.
+const tools = [
+  { name: 'Figma', category: 'Design & systems', logo: 'figma' as const },
+  { name: 'Claude', category: 'AI pair', logo: 'claude' as const },
+  { name: 'Antigravity', category: 'Agentic IDE', logo: 'antigravity' as const },
+  { name: 'GitHub', category: 'Version control', logo: 'github' as const },
+  { name: 'Illustrator', category: 'Vector & brand', logo: 'illustrator' as const },
+  { name: 'Photoshop', category: 'Imaging', logo: 'photoshop' as const },
+  { name: 'Premiere Pro', category: 'Video', logo: 'premierepro' as const },
+  { name: 'Midjourney', category: 'AI imagery', logo: 'midjourney' as const },
+  { name: 'Webflow', category: 'Web build', logo: 'webflow' as const },
+  { name: 'Storybook', category: 'Design–code', logo: 'storybook' as const },
+  { name: 'Jira', category: 'Delivery', logo: 'jira' as const },
 ];
 
 // Private skills — realistic placeholders, easy to edit.
@@ -116,7 +106,7 @@ const jsonLd = JSON.stringify({
     jobTitle: 'Product Designer, Design Systems',
     url: 'https://danielklinke.design',
     sameAs: ['https://www.linkedin.com/in/danielklinke'],
-    knowsAbout: skills.map((s) => s.area),
+    knowsAbout: tools.map((t) => t.name),
   },
 });
 ---
@@ -171,17 +161,33 @@ const jsonLd = JSON.stringify({
       <Timeline entries={timeline} />
     </section>
 
-    <!-- Professional skills -->
+    <!-- Areas of specialization -->
+    <section class="block" aria-labelledby="areas-heading">
+      <div data-reveal>
+        <p class="section-eyebrow" data-reveal-item style="--index: 0">Specializations</p>
+        <h2 id="areas-heading" class="display section-title" data-reveal-item style="--index: 1">
+          Areas
+        </h2>
+        <p class="section-sub" data-reveal-item style="--index: 2">
+          Where I'm at home and have built real depth — so you can tell at a glance whether I'm the
+          right fit for your problem.
+        </p>
+      </div>
+      <AreaList {areas} />
+    </section>
+
+    <!-- Tools & programs -->
     <section class="block" aria-labelledby="skills-heading">
       <div data-reveal>
         <h2 id="skills-heading" class="display section-title" data-reveal-item style="--index: 0">
           What I'm deep in
         </h2>
         <p class="section-sub" data-reveal-item style="--index: 1">
-          Hover a card to bring it forward. The meters are a rough read on where I spend my craft.
+          The programs I reach for daily — from design and motion to documentation and code. Hover a
+          card to bring it forward.
         </p>
       </div>
-      <SkillMatrix {skills} />
+      <ToolGrid {tools} />
     </section>
 
     <!-- Private skills -->
@@ -262,6 +268,19 @@ const jsonLd = JSON.stringify({
 
   .block {
     padding-block: var(--space-3xl);
+  }
+
+  .section-eyebrow {
+    display: inline-flex;
+    margin-block-end: var(--space-md);
+    padding: var(--space-2xs) var(--space-md);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+    background-color: var(--color-bg-subtle);
+    border-radius: var(--radius-full);
   }
 
   .section-title {

@@ -1,0 +1,57 @@
+---
+interface Props {
+  areas: string[];
+}
+
+const { areas } = Astro.props;
+---
+
+<ul role="list" class="area-list" data-reveal>
+  {
+    areas.map((area, i) => (
+      <li class="area-item" data-reveal-item style={`--index: ${i}`}>
+        <span class="area-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        </span>
+        <span class="area-label">{area}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .area-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+    gap: var(--space-md) var(--space-lg);
+    margin: 0;
+    padding: 0;
+  }
+
+  .area-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  /* Ink check on a neon disc — keeps the neon guardrail (only on-accent rides neon). */
+  .area-check {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-full);
+  }
+
+  .area-label {
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+  }
+</style>

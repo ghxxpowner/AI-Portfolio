@@ -5,15 +5,42 @@ interface Props {
   right?: string;
   bottom?: string;
   left?: string;
+  /** Enables the gentle pulse + cursor parallax (opt-in, e.g. the home hero). */
+  interactive?: boolean;
+  /** Signed parallax distance in px — positive follows the cursor, negative opposes. */
+  strength?: number;
+  /** Per-blob pulse timing so multiple blobs breathe out of sync. */
+  pulseDuration?: string;
+  pulseDelay?: string;
 }
 
-const { size = '40rem', top, right, bottom, left } = Astro.props;
+const {
+  size = '40rem',
+  top,
+  right,
+  bottom,
+  left,
+  interactive = false,
+  strength = 28,
+  pulseDuration = '7s',
+  pulseDelay = '0s',
+} = Astro.props;
 ---
 
 <div
-  class="glow"
+  class:list={['glow', { 'is-interactive': interactive }]}
   aria-hidden="true"
-  style={{ '--glow-size': size, top, right, bottom, left }}
+  data-glow-parallax={interactive ? '' : undefined}
+  data-strength={interactive ? String(strength) : undefined}
+  style={{
+    '--glow-size': size,
+    '--pulse-duration': pulseDuration,
+    '--pulse-delay': pulseDelay,
+    top,
+    right,
+    bottom,
+    left,
+  }}
 >
 </div>
 
@@ -26,5 +53,31 @@ const { size = '40rem', top, right, bottom, left } = Astro.props;
     pointer-events: none;
     background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 65%);
     opacity: var(--glow-opacity);
+  }
+
+  /* Pulse + cursor parallax — opt-in, and only when motion is allowed. scale is
+     driven by the keyframes, translate by --gx/--gy (set by glow.ts); they're
+     independent transform properties so they never fight. Without JS the blob
+     just breathes in place; under reduced motion it stays completely still. */
+  @media (prefers-reduced-motion: no-preference) {
+    .glow.is-interactive {
+      translate: var(--gx, 0) var(--gy, 0);
+      animation: glow-pulse var(--pulse-duration, 7s) var(--ease-out-soft) var(--pulse-delay, 0s)
+        infinite;
+      transition: translate 600ms var(--ease-out-cubic);
+      will-change: scale, translate;
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      scale: 1;
+      opacity: var(--glow-opacity);
+    }
+    50% {
+      scale: 1.14;
+      opacity: calc(var(--glow-opacity) * 1.3);
+    }
   }
 </style>

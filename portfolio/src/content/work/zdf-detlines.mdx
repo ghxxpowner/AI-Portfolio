@@ -26,6 +26,7 @@ stats:
 import { Image } from 'astro:assets';
 import Figure from '../../components/Figure.astro';
 import Callout from '../../components/Callout.astro';
+import CardStatusList from '../../components/CardStatusList.astro';
 
 import imgSummary from '../../assets/work/zdf-detlines/executive-summary.jpg';
 import imgAnatomy from '../../assets/work/zdf-detlines/anatomy.jpg';
@@ -142,3 +143,9 @@ DetLines is continuously evolving, featuring more flexible theming options, a mo
 >
   <Image src={imgImplementation} alt="Diagram of the DetLines implementation loop: design, test, evaluation, redesign, code — with an evaluation step for build versus reuse" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
 </Figure>
+
+## Always in sync
+
+Keeping Figma, Zeroheight and Storybook reconciled is the system's daily heartbeat. When a library drifts, the team reviews the diff and synchronizes it back to the single source of truth — try it below.
+
+<CardStatusList />

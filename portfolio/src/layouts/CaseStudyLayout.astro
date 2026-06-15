@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import '../styles/prose.css';
 import BaseLayout from './BaseLayout.astro';
 import CaseStudyHero from '../components/CaseStudyHero.astro';
-import StatRow from '../components/StatRow.astro';
+import CaseStudyStats from '../components/CaseStudyStats.astro';
 import Pager from '../components/Pager.astro';
 
 interface Props {
@@ -21,7 +21,7 @@ const { entry, prev, next } = Astro.props;
     <div class="at-a-glance" data-reveal>
       <h2 class="visually-hidden">At a glance</h2>
       <div data-reveal-item>
-        <StatRow stats={entry.data.stats} />
+        <CaseStudyStats stats={entry.data.stats} />
       </div>
     </div>
     <div class="prose flow">

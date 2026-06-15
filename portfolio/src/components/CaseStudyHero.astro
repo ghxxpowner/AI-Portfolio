@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import MetaGrid from './MetaGrid.astro';
+import CaseStudyMeta from './CaseStudyMeta.astro';
 import Artwork from './artwork/Artwork.astro';
 import GlowBlob from './GlowBlob.astro';
 
@@ -23,21 +23,25 @@ const meta = [
 
 <header class="cs-hero" data-reveal>
   <GlowBlob size="34rem" top="-16rem" right="-12rem" />
-  <p class="eyebrow" data-reveal-item style="--index: 0">{client} · {year}</p>
-  <h1 data-reveal-item style="--index: 1">{title}</h1>
-  <p class="summary" data-reveal-item style="--index: 2">{summary}</p>
-  <div data-reveal-item style="--index: 3">
-    <MetaGrid items={meta} />
+
+  <div class="cs-id" data-reveal-item style="--index: 0">
+    <p class="eyebrow">{client} · {year}</p>
+    <h1>{title}</h1>
   </div>
-  <div data-reveal-item style="--index: 4">
+
+  <div class="cs-meta" data-reveal-item style="--index: 1">
+    <CaseStudyMeta items={meta} />
+  </div>
+
+  <div class="cs-photo" data-reveal-item style="--index: 2">
     {
       heroImage ? (
         <Image
           class="hero-photo"
           src={heroImage}
           alt=""
-          widths={[800, 1400, 2200]}
-          sizes="(max-width: 80rem) 100vw, 75rem"
+          widths={[800, 1400, 2200, 2800]}
+          sizes="(min-width: 64rem) min(94rem, calc(100vw - 4rem)), 100vw"
           loading="eager"
           fetchpriority="high"
         />
@@ -46,33 +50,65 @@ const meta = [
       )
     }
   </div>
+
+  <p class="summary" data-reveal-item style="--index: 3">{summary}</p>
 </header>
 
 <style>
   .cs-hero {
     position: relative;
     display: grid;
-    gap: var(--space-lg);
-    padding-block-start: var(--space-3xl);
+    /* minmax(0, 1fr) keeps the breakout photo from stretching the column */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+    padding-block-start: var(--space-2xl);
+  }
+
+  .cs-id {
+    display: grid;
+    gap: var(--space-md);
   }
 
   h1 {
-    max-width: 18ch;
+    max-width: 20ch;
     font-size: var(--text-4xl);
     letter-spacing: var(--tracking-display);
+    text-wrap: balance;
   }
 
   .summary {
-    max-width: 50ch;
+    max-width: 60ch;
     font-size: var(--text-xl);
     line-height: var(--leading-snug);
     color: var(--color-text-muted);
     text-wrap: pretty;
   }
 
-  .hero-photo {
+  /* Photo breaks out of the reading container: full-bleed on mobile/tablet,
+     wider-than-container (but framed) from desktop up. Centered on the viewport
+     via left/transform — independent of the reveal's `translate`, so they don't
+     conflict. */
+  .cs-photo {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    inline-size: 100vw;
+    margin-block-start: var(--space-sm);
+  }
+
+  .cs-photo :global(.hero-photo) {
+    display: block;
     inline-size: 100%;
     block-size: auto;
-    border-radius: var(--radius-2xl);
+  }
+
+  @media (min-width: 64rem) {
+    .cs-photo {
+      inline-size: min(94rem, calc(100vw - 4rem));
+    }
+
+    .cs-photo :global(.hero-photo) {
+      border-radius: var(--radius-2xl);
+    }
   }
 </style>

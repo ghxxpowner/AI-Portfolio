@@ -1,0 +1,98 @@
+---
+interface Props {
+  stats: { value: string; label: string }[];
+}
+
+const { stats } = Astro.props;
+---
+
+<ul role="list" class="cs-stats">
+  {
+    stats.map((stat) => (
+      <li class="cs-stat">
+        <span class="cs-stat-value">{stat.value}</span>
+        <span class="cs-stat-label">{stat.label}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  /* Minimalist: no backgrounds, values carry the weight, items separated by
+     hairline rules. Two per row (a 2×2 grid), never three; four in a row only
+     once they comfortably fit. */
+  .cs-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cs-stat {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  /* 2×2: vertical rule before the right column, horizontal rule before row two,
+     outer edges flush. */
+  .cs-stat:nth-child(2n + 1) {
+    padding-inline-start: 0;
+  }
+
+  .cs-stat:nth-child(2n) {
+    padding-inline-end: 0;
+    border-inline-start: var(--border-hairline);
+  }
+
+  .cs-stat:nth-child(n + 3) {
+    border-block-start: var(--border-hairline);
+  }
+
+  @media (min-width: 64rem) {
+    .cs-stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .cs-stat {
+      padding: var(--space-2xs) var(--space-lg);
+      border-inline-start: var(--border-hairline);
+    }
+
+    /* One row: no horizontal rule (matches the divider rule's specificity so it
+       actually overrides). The horizontal line stays only for the 2-row grid. */
+    .cs-stat:nth-child(n + 3) {
+      border-block-start: none;
+    }
+
+    .cs-stat:nth-child(2n) {
+      padding-inline-end: var(--space-lg);
+    }
+
+    .cs-stat:nth-child(2n + 1) {
+      padding-inline-start: var(--space-lg);
+    }
+
+    /* Only the very first item is flush-left with no divider. */
+    .cs-stat:first-child {
+      padding-inline-start: 0;
+      border-inline-start: none;
+    }
+  }
+
+  .cs-stat-value {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cs-stat-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+</style>

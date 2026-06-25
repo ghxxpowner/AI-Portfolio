@@ -42,7 +42,6 @@ export const experience: ExperienceEntry[] = [
   {
     role: 'Design System Architect — ZDF DetLines',
     company: 'ZDF',
-    companyUrl: '/work/zdf-detlines/',
     location: 'Germany',
     start: '2024',
     end: '2026',

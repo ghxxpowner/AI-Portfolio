@@ -15,15 +15,20 @@ const { entries = experience } = Astro.props;
     entries.map((entry) => {
       const initial = entry.company.trim().charAt(0).toUpperCase();
       return (
-      <li class="exp-item">
+      <li class:list={['exp-item', { 'is-current': entry.current }]}>
         <span class="exp-node" aria-hidden="true" />
-        <article class="exp-card">
+        <article class="exp-card" data-spotlight={entry.current ? '' : undefined}>
           <header class="exp-head">
+            <span class="exp-period">
+              <time datetime={entry.start}>{entry.start}</time>
+              <span aria-hidden="true"> – </span>
+              {entry.end ? <time datetime={entry.end}>{entry.end}</time> : <span>Today</span>}
+            </span>
             <div class="exp-titleline">
               <h3 class="exp-role">{entry.role}</h3>
               {entry.current && <span class="exp-now">Now</span>}
             </div>
-            <p class="exp-org">
+            <div class="exp-org">
               <span class="exp-logo" aria-hidden="true">{initial}</span>
               <span class="exp-company">
                 {entry.companyUrl ? (
@@ -32,13 +37,7 @@ const { entries = experience } = Astro.props;
                   <span>{entry.company}</span>
                 )}
               </span>
-              <span class="exp-loc">· {entry.location}</span>
-            </p>
-            <p class="exp-period">
-              <time datetime={entry.start}>{entry.start}</time>
-              <span aria-hidden="true"> – </span>
-              {entry.end ? <time datetime={entry.end}>{entry.end}</time> : <span>Today</span>}
-            </p>
+            </div>
           </header>
 
           <p class="exp-summary">{entry.summary}</p>
@@ -51,13 +50,6 @@ const { entries = experience } = Astro.props;
             </ul>
           )}
 
-          {entry.skills.length > 0 && (
-            <ul class="exp-skills" aria-label="Skills">
-              {entry.skills.map((s) => (
-                <li class="exp-skill">{s}</li>
-              ))}
-            </ul>
-          )}
         </article>
       </li>
       );
@@ -115,6 +107,46 @@ const { entries = experience } = Astro.props;
     position: relative;
   }
 
+  /* Current role — a restrained neutral outline (not brand-colored) with a
+     cursor-reactive glow, plus a light ambient glow behind the card. */
+  .exp-item.is-current .exp-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-color: var(--color-border-strong);
+  }
+
+  /* Glow that follows the pointer. resume.ts writes --mx/--my (and gates this
+     on motion + a fine pointer); falls back to centered/off otherwise. */
+  .exp-item.is-current .exp-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    background: radial-gradient(
+      16rem circle at var(--mx, 50%) var(--my, 50%),
+      var(--color-accent-glow),
+      transparent 60%
+    );
+    transition: opacity var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .exp-item.is-current .exp-card:hover::before,
+  .exp-item.is-current .exp-card:focus-within::before {
+    opacity: calc(var(--glow-opacity) * 0.55);
+  }
+
+  /* Light static glow halo behind the card — softer than before. */
+  .exp-item.is-current::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 0 30px -12px color-mix(in srgb, var(--color-accent) 22%, transparent);
+    pointer-events: none;
+  }
+
   .exp-node {
     position: absolute;
     inset-block-start: 0.45rem;
@@ -140,7 +172,18 @@ const { entries = experience } = Astro.props;
 
   .exp-head {
     display: grid;
-    gap: var(--space-2xs);
+    gap: 0;
+  }
+
+  /* Company/logo row gets equal breathing room above (to the title) and below
+     (to the summary). */
+  .exp-org {
+    margin-block-start: var(--space-sm);
+  }
+
+  /* Period reads as a tight eyebrow above the role title. */
+  .exp-period {
+    margin-block-end: var(--space-2xs);
   }
 
   .exp-titleline {
@@ -181,14 +224,21 @@ const { entries = experience } = Astro.props;
     display: grid;
     place-items: center;
     flex-shrink: 0;
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
-    font-size: var(--text-xs);
+    inline-size: 3rem;
+    block-size: 3rem;
+    font-size: var(--text-sm);
     font-weight: 700;
     color: var(--color-text-muted);
     background-color: var(--color-bg-subtle);
     border: var(--border-hairline);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-md);
+  }
+
+  /* Smaller than the role above it. */
+  .exp-company {
+    font-size: var(--text-md);
+    font-weight: 600;
+    color: var(--color-text);
   }
 
   .exp-org a {
@@ -217,6 +267,7 @@ const { entries = experience } = Astro.props;
     text-transform: uppercase;
     color: var(--color-text-muted);
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
   .exp-summary {
@@ -236,24 +287,6 @@ const { entries = experience } = Astro.props;
 
   .exp-highlights li::marker {
     color: var(--color-text-muted);
-  }
-
-  .exp-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .exp-skill {
-    padding: var(--space-2xs) var(--space-sm);
-    font-size: var(--text-xs);
-    font-weight: 600;
-    color: var(--color-text);
-    background-color: var(--color-bg-subtle);
-    border-radius: var(--radius-full);
   }
 
   /* ----------------------------------------------------------------------

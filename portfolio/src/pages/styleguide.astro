@@ -12,7 +12,7 @@ import TokenTable from '../components/TokenTable.astro';
 import MetaGrid from '../components/MetaGrid.astro';
 import Marquee from '../components/Marquee.astro';
 import StatCards from '../components/StatCards.astro';
-import Timeline from '../components/Timeline.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import AreaList from '../components/AreaList.astro';
 import ToolGrid from '../components/ToolGrid.astro';
 import SkillTags from '../components/SkillTags.astro';
@@ -249,22 +249,36 @@ const sections = [
         Resume blocks
       </h2>
       <p class="sg-note" data-reveal-item style="--index: 1">
-        The interactive pieces of the <a href="/resume/">Resume</a> page. The timeline rail draws as
-        the section reveals; tool cards carry a self-hosted, theme-aware logo and lift with a pointer
-        spotlight on hover; the area checklist marks each specialization with an ink check on neon;
-        private skills are neon-inverting badges. All honor the reduced-motion and no-JS contract —
-        the rail simply renders full and the spotlight is skipped.
+        The interactive pieces of the <a href="/resume/">Resume</a> page. The experience timeline's
+        rail fills with scroll progress while each station activates as it rises into view; tool cards
+        carry a self-hosted, theme-aware logo and lift with a pointer spotlight on hover; private
+        skills are neon-inverting badges. All honor the reduced-motion and no-JS contract — the rail
+        simply renders full, every station is active, and the spotlight is skipped.
       </p>
       <div class="resume-stack" data-reveal-item style="--index: 2">
-        <Timeline
+        <ExperienceTimeline
           entries={[
-            { period: '2022 — today', role: 'Product Designer, Design Systems', org: 'Jakala' },
             {
-              period: '2024 — 2026',
-              role: 'ZDF DetLines — Design System Architect',
-              org: 'Flagship engagement',
-              tag: 'Highlight',
-              href: '/work/zdf-detlines/',
+              role: 'Product Designer, Design Systems',
+              company: 'Jakala',
+              location: 'Germany',
+              start: '2022',
+              current: true,
+              summary:
+                'Leading token architecture, component libraries, governance and accessibility.',
+              highlights: ['Token architecture across 12 brands', 'Self-sustaining contribution model'],
+              skills: ['Design tokens', 'Governance', 'Figma'],
+            },
+            {
+              role: 'Design System Architect — ZDF DetLines',
+              company: 'ZDF',
+              companyUrl: '/work/zdf-detlines/',
+              location: 'Germany',
+              start: '2024',
+              end: '2026',
+              summary: "Cross-platform design system behind ZDF's 2025 streaming launch.",
+              highlights: ['Six platforms, thirteen breakpoints', 'One source of truth'],
+              skills: ['Cross-platform', 'Smart TV', 'Storybook'],
             },
           ]}
         />

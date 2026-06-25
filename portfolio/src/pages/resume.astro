@@ -4,7 +4,7 @@ import GlowBlob from '../components/GlowBlob.astro';
 import PillButton from '../components/PillButton.astro';
 import StatCards from '../components/StatCards.astro';
 import AvatarPortrait from '../components/AvatarPortrait.astro';
-import Timeline from '../components/Timeline.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import AreaList from '../components/AreaList.astro';
 import ToolGrid from '../components/ToolGrid.astro';
 import SkillTags from '../components/SkillTags.astro';
@@ -15,39 +15,6 @@ const bigStats = [
   { value: '12', label: 'brands carried by one design system', variant: 'gradient' as const },
   { value: '23', label: 'product squads shipping on my systems', variant: 'ink' as const },
   { value: 'AA', label: 'WCAG 2.2 — verified by independent audit', variant: 'neon' as const },
-];
-
-// Career history (real), newest first, with the ZDF flagship called out.
-const timeline = [
-  {
-    period: '2022 — today',
-    role: 'Product Designer, Design Systems',
-    org: 'Jakala',
-    detail:
-      'Leading token architecture, component libraries, governance and accessibility for multi-brand, multi-platform products.',
-  },
-  {
-    period: '2024 — 2026',
-    role: 'ZDF DetLines — Design System Architect',
-    org: 'Flagship engagement at Jakala',
-    tag: 'Highlight',
-    href: '/work/zdf-detlines/',
-    detail:
-      "Led the cross-platform design system behind ZDF's 2025 streaming launch — one source of truth across web, mobile and smart TV, six platforms and thirteen breakpoints.",
-  },
-  {
-    period: '2019 — 2022',
-    role: 'Product Designer',
-    org: 'Digital product agency',
-    detail:
-      'Shipped product UI across web and mobile and migrated legacy style guides toward token-based foundations.',
-  },
-  {
-    period: '2016 — 2019',
-    role: 'UI/Visual Designer',
-    org: 'Brand & digital studio',
-    detail: 'Brand systems, visual design and the first component libraries that set me on the systems path.',
-  },
 ];
 
 // Areas of specialization — where I've built real expertise.
@@ -158,7 +125,7 @@ const jsonLd = JSON.stringify({
           A decade moving from visual craft toward the systems that scale it.
         </p>
       </div>
-      <Timeline entries={timeline} />
+      <ExperienceTimeline />
     </section>
 
     <!-- Areas of specialization -->

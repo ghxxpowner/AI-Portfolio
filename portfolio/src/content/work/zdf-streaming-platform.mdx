@@ -1,0 +1,151 @@
+---
+title: 'ZDF Streaming Platform'
+summary: 'Part of the ZDF Streaming Platform relaunch, with a fully new design.'
+heroImage: '../../assets/work/zdf-detlines/keyvisual.jpg'
+client: 'ZDF'
+year: '2024 - 2026'
+role: 'Product designer, Design System Arcitect'
+team: 'A lot of professionals'
+timeline: '2 years'
+platform: 'Web, Android, iOS, Android TV, tvOS, hbbTV'
+discipline: ['Design systems', 'UI Design', 'Cross-platform']
+artwork: 'User Interface Design'
+featured: true
+order: 0
+stats:
+  - value: '6'
+    label: 'platforms served — web, Android, iOS, Android TV, tvOS & hbbTV'
+  - value: '13'
+    label: 'breakpoints covered by one responsive foundation'
+  - value: '1'
+    label: 'source of truth across Figma, Zeroheight & Storybook'
+  - value: '2025'
+    label: 'ZDF streaming platform launch built on DetLines'
+---
+
+import { Image } from 'astro:assets';
+import Figure from '../../components/Figure.astro';
+import Callout from '../../components/Callout.astro';
+import CardStatusList from '../../components/CardStatusList.astro';
+
+import imgSummary from '../../assets/work/zdf-detlines/executive-summary.jpg';
+import imgAnatomy from '../../assets/work/zdf-detlines/anatomy.jpg';
+import imgFoundations from '../../assets/work/zdf-detlines/foundations.jpg';
+import imgGrids from '../../assets/work/zdf-detlines/grids.jpg';
+import imgTypography from '../../assets/work/zdf-detlines/typography.jpg';
+import imgComponents from '../../assets/work/zdf-detlines/components.jpg';
+import imgPatterns from '../../assets/work/zdf-detlines/patterns.jpg';
+import imgFigmaHome from '../../assets/work/zdf-detlines/figma-home.jpg';
+import imgPages from '../../assets/work/zdf-detlines/pages.jpg';
+import imgImplementation from '../../assets/work/zdf-detlines/implementation.jpg';
+
+## About the project
+
+For the 2025 launch of the new ZDF streaming platform, I led the conception and development of the DetLines design system at JAKALA. In close partnership with ZDF, we transformed the design vision into a comprehensive, cross-platform design and component library.
+
+This system serves as ZDF's new digital foundation: it ensures visual consistency across all products and interfaces while providing a future-proof framework for efficient development on web, mobile apps and smart TV. Furthermore, it establishes the design cornerstone for the major strategic Streaming OS initiative in cooperation with ARD.
+
+<Figure
+  caption="The DetLines workspace: foundation, icon library, core library, player, streaming portal and page libraries — organized so every team finds the right building block in seconds."
+  fullWidth
+>
+  <Image src={imgFigmaHome} alt="Figma project overview of the ZDF design system DetLines with libraries for foundation, icons, core, player, streaming portal and pages" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+<Figure
+  caption="One design system, six platforms, thirteen breakpoints — the same title page rendered seamlessly from TV to phone."
+  fullWidth
+>
+  <Image src={imgSummary} alt="ZDF streaming interfaces on TV, laptop, tablet and phone, annotated with 13 breakpoints, 6 platforms, 1 design system" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+## Why DetLines?
+
+With a vast ecosystem of ZDF applications, a shared foundation became essential to ensure an inclusive and high-performance streaming experience. The resulting design system consolidates technical expertise, integrates editorial requirements, and accelerates workflows.
+
+By using reusable, consistently named components across both design and code, new features can be implemented significantly faster. Clear naming conventions ensure that building blocks are easy to find and streamline team alignment. At the same time, handoffs become more precise, QA processes more efficient, and reuse rates increase. This foundation simplifies onboarding, fosters knowledge transfer, and strengthens the collaboration between design and development teams.
+
+<Figure
+  caption="Anatomy of the DetLines design system: ZDF foundations and the icon library feed the core component layer — player and core library — which product libraries like the streaming portal and further brands build upon. It's organic and living."
+  fullWidth
+>
+  <Image src={imgAnatomy} alt="Bubble diagram of the DetLines architecture: Foundation and Icon Library, Core Library and Player, Streaming Portal and Further Brands" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+## Foundation: tokens, grids and styles
+
+The system is built on central design tokens for colors, typography, spacing, interactions and responsive grids. These ensure a consistent look and feel across all touchpoints while providing full scalability: any adjustment is managed centrally and propagates immediately across all products.
+
+<Figure
+  caption="The foundation layer: typography, color, motion, elevation, breakpoints, sizes, spacing and text spacing — every visual decision defined once, as a token."
+  fullWidth
+>
+  <Image src={imgFoundations} alt="Eight foundation categories of the DetLines system: typography, colors, motion, elevation, breakpoints, sizes, spacing and text spacing" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+<Figure
+  caption="Responsive container and spacing variables per platform and breakpoint range — the same semantic names resolve to compact, medium or large values from phone to TV."
+  fullWidth
+>
+  <Image src={imgGrids} alt="Figma variables for container spacing across Android breakpoints, shown applied to phone and web layouts" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+## Components, patterns and pages
+
+Based on these design tokens, we create reusable components such as buttons, input fields and notifications. These are then assembled into more complex patterns like navigation bars, modals or hero modules. These modular building blocks can be flexibly combined and adapted to specific platforms, resulting in brand-consistent interfaces.
+
+<Figure
+  caption="Platform-wide style naming: the same text-style taxonomy — action, body, heading, meta, title — resolves per platform and breakpoint, so a teaser tile speaks one naming language everywhere."
+  fullWidth
+>
+  <Image src={imgTypography} alt="Text style structure for tv-html, android-tv, tvos and size ranges, next to teaser tile specimens for phone and desktop" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+<Figure
+  caption="One component, three platforms: the inline notification exists as web, Android and iOS variants with identical props — breakpoint, validation, icon, text."
+  fullWidth
+>
+  <Image src={imgComponents} alt="Inline notification component shown side by side for web, Android and iOS in Figma, with matching property panels" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+Platform-specific enhancements — including hover states, keyboard focus and native controls — ensure that all interfaces are implemented consistently and remain context-aware.
+
+<Figure
+  caption="The component playground: every pattern, like this smart-collection hero, can be configured through its full property API — breakpoints, content slots and feature toggles — before it ever reaches a page."
+  fullWidth
+>
+  <Image src={imgPatterns} alt="Component playground showing a hero pattern with its configurable properties such as breakpoint, type, trailer button and availability" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+<Figure
+  caption="From components to pages: standard and special page templates — home, episode pages, collections, A–Z, categories, error and geo-restriction states — assembled entirely from system patterns."
+  fullWidth
+>
+  <Image src={imgPages} alt="Overview of DetLines page templates for mobile: collections, episode pages, smart collections, A-Z, geo restriction and sharing states" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+## Documentation and further development
+
+All rules, components and examples are centrally documented in Zeroheight and closely linked to code samples in Storybook.
+
+<Callout label="Single source of truth">
+  <p>
+    Figma, documentation and code share identical components — one consistent source of truth
+    across design and development, from the first draft in Figma to the shipped interface.
+  </p>
+</Callout>
+
+DetLines is continuously evolving, featuring more flexible theming options, a more automated tokenization pipeline, and additional guidelines to systematically integrate new features.
+
+<Figure
+  caption="Implementation and further development as a loop: design, test, evaluation and redesign feed the system; every feature decision starts with build vs. reuse."
+  fullWidth
+>
+  <Image src={imgImplementation} alt="Diagram of the DetLines implementation loop: design, test, evaluation, redesign, code — with an evaluation step for build versus reuse" widths={[800, 1400, 2200]} sizes="(max-width: 80rem) 100vw, 75rem" />
+</Figure>
+
+## Always in sync
+
+Keeping Figma, Zeroheight and Storybook reconciled is the system's daily heartbeat. When a library drifts, the team reviews the diff and synchronizes it back to the single source of truth — try it below.
+
+<CardStatusList />

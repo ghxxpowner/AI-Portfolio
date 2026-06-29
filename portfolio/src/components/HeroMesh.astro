@@ -1,0 +1,112 @@
+---
+// Decorative animated mesh-gradient for the hero. Three soft radial blobs in
+// accent-derived colors, so the whole mesh recolors as the accent hue drifts.
+// Two CSS-only motions: a constant slow drift per blob, and a scroll-driven
+// shift/fade of the whole layer. Inert (static) under reduced motion, and
+// aria-hidden / pointer-events:none so it never affects content or a11y.
+---
+
+<div class="hero-mesh" aria-hidden="true">
+  <span class="mesh-blob blob-a"></span>
+  <span class="mesh-blob blob-b"></span>
+  <span class="mesh-blob blob-c"></span>
+</div>
+
+<style>
+  .hero-mesh {
+    position: absolute;
+    inset: -20% -10%;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--glow-opacity);
+  }
+
+  .mesh-blob {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+    will-change: transform;
+  }
+
+  .blob-a {
+    inline-size: 42rem;
+    block-size: 42rem;
+    inset-block-start: -14rem;
+    inset-inline-end: -6rem;
+    background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 60%);
+  }
+
+  .blob-b {
+    inline-size: 34rem;
+    block-size: 34rem;
+    inset-block-end: -16rem;
+    inset-inline-start: -10rem;
+    background: radial-gradient(circle, var(--color-accent-strong) 0%, transparent 62%);
+  }
+
+  .blob-c {
+    inline-size: 30rem;
+    block-size: 30rem;
+    inset-block-start: 18%;
+    inset-inline-start: 32%;
+    background: radial-gradient(circle, var(--color-accent-sibling) 0%, transparent 60%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Constant, organic drift — transform only (compositor-friendly). */
+    .blob-a {
+      animation: mesh-a 26s ease-in-out infinite;
+    }
+    .blob-b {
+      animation: mesh-b 34s ease-in-out infinite;
+    }
+    .blob-c {
+      animation: mesh-c 30s ease-in-out infinite;
+    }
+
+    /* Scroll reaction: the whole mesh drifts up and fades as the hero scrolls
+       past. Pure CSS scroll-driven; degrades to drift-only where unsupported. */
+    .hero-mesh {
+      animation: mesh-scroll linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+  }
+
+  @keyframes mesh-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-3rem, 2rem, 0);
+    }
+  }
+
+  @keyframes mesh-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(2.5rem, -2rem, 0);
+    }
+  }
+
+  @keyframes mesh-c {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(1.5rem, 1.5rem, 0) scale(1.08);
+    }
+  }
+
+  @keyframes mesh-scroll {
+    to {
+      transform: translateY(-12%) scale(1.05);
+      opacity: 0;
+    }
+  }
+</style>

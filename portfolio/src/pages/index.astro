@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PillButton from '../components/PillButton.astro';
 import ScrollDownButton from '../components/ScrollDownButton.astro';
-import GlowBlob from '../components/GlowBlob.astro';
+import HeroMesh from '../components/HeroMesh.astro';
 import Marquee from '../components/Marquee.astro';
 
 const featured = (await getCollection('work', ({ data }) => data.featured && !data.draft)).sort(
@@ -91,23 +91,7 @@ const principles = [
   description="Product designer specializing in design systems — token architecture, multi-brand theming, governance and accessibility. Selected case studies."
 >
   <section class="hero container" data-reveal>
-    <GlowBlob
-      size="44rem"
-      top="-22rem"
-      right="-14rem"
-      interactive
-      strength={34}
-      pulseDuration="8s"
-    />
-    <GlowBlob
-      size="36rem"
-      bottom="-20rem"
-      left="-16rem"
-      interactive
-      strength={-46}
-      pulseDuration="11s"
-      pulseDelay="-4s"
-    />
+    <HeroMesh />
     <h1 class="display" data-split="chars">Design systems that teams adopt</h1>
     <div data-split="lines">
       <p class="hero-sub">

@@ -61,6 +61,8 @@
   --color-accent-strong: var(--neon-600);
   --color-on-accent: var(--ink);
   --color-accent-glow: var(--neon-500);
+  /* Sibling hue for the hero mesh; drifts with the accent (see motion block). */
+  --color-accent-sibling: var(--neon-500);
   --glow-opacity: 0.5;
   --color-border: var(--gray-200);
   --color-border-strong: var(--gray-300);
@@ -193,5 +195,55 @@
     --duration-quick: 0ms;
     --duration-slow: 0ms;
     --duration-reveal: 0ms;
+  }
+}
+
+/* --------------------------------------------------------------------
+   Experimental: dynamic accent
+   --------------------------------------------------------------------
+   The accent hue drifts slowly within a deliberately BRIGHT band, so the
+   ink-on-accent pairing (--color-on-accent on any accent fill) stays
+   high-contrast (AAA) at every step and a bright accent on dark surfaces
+   stays legible. Only the hue moves; lightness is pinned high.
+
+   The static neon above remains the fallback: under reduced motion, or
+   where @property / oklch is unsupported, the accent is the exact brand
+   neon and never moves. -------------------------------------------------- */
+@property --accent-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 113;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --color-accent: oklch(0.93 0.19 var(--accent-hue));
+    --color-accent-strong: oklch(0.86 0.19 var(--accent-hue));
+    --color-accent-glow: var(--color-accent);
+    --color-accent-sibling: oklch(0.92 0.18 calc(var(--accent-hue) + 40));
+    animation: accent-drift 32s ease-in-out infinite;
+  }
+}
+
+@keyframes accent-drift {
+  0%,
+  100% {
+    --accent-hue: 113;
+  }
+  33% {
+    --accent-hue: 100;
+  }
+  66% {
+    --accent-hue: 140;
+  }
+}
+
+/* High-contrast mode: pin the brand neon, no drift. */
+@media (forced-colors: active) {
+  :root {
+    --color-accent: var(--neon-500);
+    --color-accent-strong: var(--neon-600);
+    --color-accent-glow: var(--neon-500);
+    animation: none;
   }
 }

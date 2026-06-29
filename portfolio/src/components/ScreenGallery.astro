@@ -1,0 +1,173 @@
+---
+import { Image } from 'astro:assets';
+import { screens, type Screen } from '../data/streaming-screens';
+
+// Depth → 3D push-back (translateZ), depth-of-field opacity, and parallax
+// amplitude. Near (1) sits forward and moves most; far (3) sits back, dimmer,
+// and moves least. Values are component-local (no global tokens touched).
+const depthMap: Record<Screen['depth'], { tz: string; op: string; amp: string }> = {
+  1: { tz: '0px', op: '1', amp: '46px' },
+  2: { tz: '-120px', op: '0.92', amp: '28px' },
+  3: { tz: '-250px', op: '0.82', amp: '14px' },
+};
+---
+
+<div class="sg full-width" data-screen-gallery>
+  <ul class="sg-grid">
+    {
+      screens.map((screen) => {
+        const d = depthMap[screen.depth];
+        const img = (
+          <Image
+            src={screen.image}
+            alt={screen.alt}
+            widths={[270, 540]}
+            sizes="(min-width: 64rem) 16vw, (min-width: 48rem) 26vw, 42vw"
+            loading="lazy"
+            decoding="async"
+          />
+        );
+        return (
+          <li
+            class="sg-item"
+            data-depth={screen.depth}
+            style={`--sg-tz: ${d.tz}; --sg-op: ${d.op}; --sg-amp: ${d.amp};`}
+          >
+            <figure class="sg-fig">
+              {screen.projectUrl ? (
+                <a class="sg-link" href={screen.projectUrl}>
+                  {img}
+                </a>
+              ) : (
+                img
+              )}
+              {screen.caption && <figcaption>{screen.caption}</figcaption>}
+            </figure>
+          </li>
+        );
+      })
+    }
+  </ul>
+</div>
+
+<style>
+  .sg {
+    padding-block: var(--space-2xl);
+  }
+
+  /* Base layout = calm, readable flat grid. This is what reduced motion, no-JS,
+     unsupported browsers, and small screens get — nothing is ever hidden. */
+  .sg-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .sg-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .sg-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .sg-fig {
+    margin: 0;
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .sg-fig :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--radius-lg);
+    border: var(--border-hairline);
+  }
+
+  .sg-link {
+    display: block;
+    border-radius: var(--radius-lg);
+  }
+
+  .sg-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .sg-fig figcaption {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* 3D + parallax — only when motion is allowed AND there's room (≥48rem).
+     Below that, or under reduced motion, the flat grid above stands. */
+  @media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
+    .sg-grid {
+      perspective: 1100px;
+      perspective-origin: 50% 45%;
+    }
+
+    .sg-item {
+      transform-style: preserve-3d;
+      /* Static 3D placement lives in `transform`; scroll parallax uses the
+         independent `translate` property, so they never fight. */
+      transform: translate3d(0, var(--sg-stagger, 0px), var(--sg-tz, 0px))
+        rotateY(var(--sg-ry, 0deg)) rotate(var(--sg-rz, 0deg));
+      opacity: var(--sg-op, 1);
+      will-change: transform;
+    }
+
+    /* Gentle, non-rigid stagger + slight spatial rotation. */
+    .sg-item:nth-child(even) {
+      --sg-stagger: 1.7rem;
+      --sg-ry: -5deg;
+      --sg-rz: 0.9deg;
+    }
+    .sg-item:nth-child(odd) {
+      --sg-stagger: -0.7rem;
+      --sg-ry: 5deg;
+      --sg-rz: -0.9deg;
+    }
+
+    @media (min-width: 64rem) {
+      .sg-grid {
+        perspective: 1300px;
+      }
+    }
+
+    /* Preferred: JS-free, scroll-linked, bidirectional parallax. */
+    @supports (animation-timeline: view()) {
+      .sg-item {
+        animation: sg-parallax linear both;
+        animation-timeline: view();
+        animation-range: cover;
+      }
+    }
+
+    /* Fallback path: screen-gallery.ts writes --sg-shift. */
+    @supports not (animation-timeline: view()) {
+      .sg-item {
+        translate: 0 var(--sg-shift, 0px);
+      }
+    }
+  }
+
+  @keyframes sg-parallax {
+    from {
+      translate: 0 var(--sg-amp);
+    }
+    to {
+      translate: 0 calc(var(--sg-amp) * -1);
+    }
+  }
+</style>

@@ -1,0 +1,169 @@
+---
+import { Image } from 'astro:assets';
+import imgTv from '../assets/work/zdf-streaming-platform/device-scene/tv.png';
+import imgLaptop from '../assets/work/zdf-streaming-platform/device-scene/laptop.png';
+import imgTablet from '../assets/work/zdf-streaming-platform/device-scene/tablet.png';
+import imgPhone from '../assets/work/zdf-streaming-platform/device-scene/phone.png';
+
+// Layered "device wall": the four device mockups are separate depth planes
+// rather than one flat composite. The TV sits furthest back and drifts least;
+// the phone sits nearest and drifts most, so scrolling reveals real parallax
+// depth. Positions reproduce the original multi-device composite. Everything
+// is component-local — no global tokens or shared styles touched.
+//
+// Motion contract: the static absolute layout below is what reduced-motion,
+// no-JS, unsupported browsers, and small screens get (nothing is ever hidden).
+// Parallax is layered on top only when motion is allowed AND there's room.
+
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+---
+
+<figure class="mds full-width">
+  <div class="mds-scene" data-multi-device>
+    <div class="mds-layer mds-tv" style="--amp: 30px;">
+      <Image
+        src={imgTv}
+        alt="Die Serienseite von „Love Sucks“ auf einem großen Fernseher mit ambientem Hintergrundlicht"
+        widths={[800, 1280, 1800, 2560]}
+        sizes="(min-width: 80rem) 75rem, 100vw"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <div class="mds-layer mds-laptop" style="--amp: 96px;">
+      <Image
+        src={imgLaptop}
+        alt="Dieselbe Serienseite im Browser auf einem Laptop"
+        widths={[461, 736, 843]}
+        sizes="(min-width: 80rem) 27rem, 36vw"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <div class="mds-layer mds-tablet" style="--amp: 80px;">
+      <Image
+        src={imgTablet}
+        alt="Das ZDF-Logo auf einem Tablet"
+        widths={[346, 566]}
+        sizes="(min-width: 80rem) 20rem, 27vw"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <div class="mds-layer mds-phone" style="--amp: 136px;">
+      <Image
+        src={imgPhone}
+        alt="Die ZDFneo-Startseite mit „Love Sucks“ auf einem Smartphone"
+        widths={[162]}
+        sizes="(min-width: 80rem) 6.5rem, 9vw"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .mds {
+    --flow-space: var(--space-xl);
+    margin: 0;
+  }
+
+  /* The scene keeps the original composite's aspect, so it scales as one banner
+     at every width. Devices are placed absolutely within it. */
+  .mds-scene {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    max-width: var(--container-max);
+    margin-inline: auto;
+  }
+
+  .mds-layer {
+    position: absolute;
+  }
+
+  .mds-layer :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  /* Static placement = the readable, JS-free, reduced-motion baseline. */
+  .mds-tv {
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    z-index: 1;
+  }
+
+  .mds-laptop {
+    inset-block-end: 4%;
+    inset-inline-start: 5%;
+    inline-size: 36%;
+    z-index: 2;
+  }
+
+  .mds-tablet {
+    inset-block-end: 9%;
+    inset-inline-end: 8%;
+    inline-size: 27%;
+    z-index: 2;
+  }
+
+  .mds-phone {
+    inset-block-end: 9%;
+    inset-inline-end: 3%;
+    inline-size: 8.5%;
+    z-index: 3;
+  }
+
+  .mds figcaption {
+    margin-block-start: var(--space-sm);
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Parallax — only when motion is allowed AND there's room (≥48rem). Below
+     that, or under reduced motion, the static composition above stands. */
+  @media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
+    /* One shared timeline driven by the whole scene's pass through the
+       viewport, so all layers move in concert — only the amplitude differs. */
+    .mds-scene {
+      view-timeline-name: --mds-tl;
+      view-timeline-axis: block;
+    }
+
+    /* Preferred: JS-free, scroll-linked, bidirectional parallax. */
+    @supports (animation-timeline: view()) {
+      .mds-layer {
+        animation: mds-parallax linear both;
+        animation-timeline: --mds-tl;
+        animation-range: cover;
+      }
+    }
+
+    /* Fallback path: multi-device-scene.ts writes --mds-shift. */
+    @supports not (animation-timeline: view()) {
+      .mds-layer {
+        translate: 0 var(--mds-shift, 0px);
+      }
+    }
+  }
+
+  @keyframes mds-parallax {
+    from {
+      translate: 0 var(--amp);
+    }
+    to {
+      translate: 0 calc(var(--amp) * -1);
+    }
+  }
+</style>

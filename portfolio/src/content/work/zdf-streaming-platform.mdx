@@ -25,9 +25,8 @@ stats:
 
 import { Image } from 'astro:assets';
 import Figure from '../../components/Figure.astro';
-import ScreenGallery from '../../components/ScreenGallery.astro';
+import MultiDeviceShowcase from '../../components/MultiDeviceShowcase.astro';
 
-import imgMultiDevice from '../../assets/work/zdf-streaming-platform/multi-device.png';
 import imgWebHome from '../../assets/work/zdf-streaming-platform/web-home.png';
 import imgWebSeries from '../../assets/work/zdf-streaming-platform/web-series.png';
 import imgWebCategory from '../../assets/work/zdf-streaming-platform/web-category.png';
@@ -50,9 +49,7 @@ import imgMobileLive from '../../assets/work/zdf-streaming-platform/mobile-live.
 
 [PLATZHALTER]
 
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgMultiDevice} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
+<MultiDeviceShowcase caption="[PLATZHALTER]" />
 
 ## Home & discovery
 
@@ -81,12 +78,6 @@ import imgMobileLive from '../../assets/work/zdf-streaming-platform/mobile-live.
 <Figure caption="[PLATZHALTER]" fullWidth>
   <Image src={imgMobileSeries} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
 </Figure>
-
-## On the small screen
-
-[PLATZHALTER]
-
-<ScreenGallery />
 
 ## Browsing categories
 

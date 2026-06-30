@@ -65,6 +65,8 @@ const { title, description, ogImage, type } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <div class="edge-fade edge-fade--top" aria-hidden="true"></div>
+    <div class="edge-fade edge-fade--bottom" aria-hidden="true"></div>
     <script>
       import '../scripts/preloader';
       import '../scripts/split-text';

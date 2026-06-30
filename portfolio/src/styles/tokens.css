@@ -223,12 +223,6 @@
     --color-accent-sibling: oklch(0.92 0.18 calc(var(--accent-hue) + 40));
     animation: accent-drift 32s ease-in-out infinite;
   }
-
-  /* Pause the per-frame recolor while scrolling (set by scroll-state.ts) so it
-     never competes with scroll; resumes, frozen at its current hue, when idle. */
-  :root.is-scrolling {
-    animation-play-state: paused;
-  }
 }
 
 @keyframes accent-drift {

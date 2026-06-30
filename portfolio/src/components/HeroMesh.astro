@@ -64,11 +64,6 @@
       animation: mesh-c 30s ease-in-out infinite;
     }
 
-    /* Pause the time-based drift while scrolling (set by scroll-state.ts). */
-    :global(html.is-scrolling) .mesh-blob {
-      animation-play-state: paused;
-    }
-
     /* Scroll reaction: the whole mesh drifts up and fades as the hero scrolls
        past. Pure CSS scroll-driven; degrades to drift-only where unsupported. */
     .hero-mesh {

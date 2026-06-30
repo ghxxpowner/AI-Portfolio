@@ -124,7 +124,6 @@ const depthMap: Record<Screen['depth'], { tz: string; op: string; amp: string }>
       transform: translate3d(0, var(--sg-stagger, 0px), var(--sg-tz, 0px))
         rotateY(var(--sg-ry, 0deg)) rotate(var(--sg-rz, 0deg));
       opacity: var(--sg-op, 1);
-      will-change: transform;
     }
 
     /* Gentle, non-rigid stagger + slight spatial rotation. */

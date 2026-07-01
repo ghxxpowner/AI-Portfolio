@@ -1,5 +1,38 @@
 /* Editorial typography for case-study bodies (MDX output) */
 
+/* Work pages run one notch larger across the board: every font-size token is
+   remapped to the next step up (xs→sm, sm→md, md→lg, …). Because components
+   consume these semantic tokens, redefining them on the case-study root bumps
+   the hero, meta, stats, prose and the custom showcase captions in one place.
+   Values are copied verbatim from tokens.css (the next step up). --text-display
+   is already the top of the scale, so it stays. */
+.case-study {
+  --text-xs: clamp(0.8125rem, 0.766rem + 0.19vw, 0.9375rem);
+  --text-sm: clamp(0.9375rem, 0.891rem + 0.19vw, 1.0625rem);
+  --text-md: clamp(1rem, 0.857rem + 0.45vw, 1.25rem);
+  --text-lg: clamp(1.125rem, 0.946rem + 0.67vw, 1.5rem);
+  --text-xl: clamp(1.375rem, 1.054rem + 1.12vw, 2rem);
+  --text-2xl: clamp(1.75rem, 1.214rem + 1.96vw, 2.875rem);
+  --text-3xl: clamp(2.25rem, 1.357rem + 3.13vw, 4rem);
+  --text-4xl: clamp(2.625rem, 1.232rem + 4.24vw, 5rem);
+  --text-5xl: clamp(3rem, 0.857rem + 9.3vw, 8.25rem);
+}
+
+/* Meta-image descriptions stay in the DOM (for assistive tech) but are hidden
+   from sight. Applies to every image figure; the pull-quote's figcaption is an
+   attribution, not an image description, so it is left visible. */
+.prose figure:not(.pull-quote) figcaption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .prose {
   --flow-space: var(--space-md);
 }
@@ -26,7 +59,7 @@
 .prose li {
   font-size: var(--text-md);
   line-height: var(--leading-normal);
-  color: var(--color-text);
+  color: var(--color-text-muted);
 }
 
 .prose ul,

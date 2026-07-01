@@ -38,9 +38,14 @@
   --gray-900: #161616;
   --gray-1000: #000000;
 
-  /* Accent — neon yellow-green */
+  /* Accent — neon yellow-green (dark mode) */
   --neon-500: #e1fc06;
   --neon-600: #c9e205;
+  /* Accent — medium olive-green (light mode). Kept light enough that dark ink
+     on it stays AA (≈ 5.2:1) AND it reads as text on the dark footer (≈ 5.2:1),
+     so the footer needs no neon exception. */
+  --moss-500: #6b8e23;
+  --moss-600: #5c7a1e;
   --ink: #0a0a0a;
 
   /* Font stacks */
@@ -57,13 +62,13 @@
   --color-surface: var(--gray-0);
   --color-text: var(--ink);
   --color-text-muted: var(--gray-600);
-  --color-accent: var(--neon-500);
-  --color-accent-strong: var(--neon-600);
+  --color-accent: var(--moss-500);
+  --color-accent-strong: var(--moss-600);
   --color-on-accent: var(--ink);
-  --color-accent-glow: var(--neon-500);
+  --color-accent-glow: var(--moss-500);
   /* Sibling hue for the hero mesh; drifts with the accent (see motion block). */
-  --color-accent-sibling: var(--neon-500);
-  --glow-opacity: 0.5;
+  --color-accent-sibling: var(--moss-500);
+  --glow-opacity: 0.32;
   --color-border: var(--gray-200);
   --color-border-strong: var(--gray-300);
   --color-focus-ring: var(--ink);
@@ -148,6 +153,8 @@
   --color-accent: var(--neon-500);
   --color-accent-strong: var(--neon-600);
   --color-on-accent: var(--ink);
+  --color-accent-glow: var(--neon-500);
+  --color-accent-sibling: var(--neon-500);
   --glow-opacity: 0.14;
   --color-border: var(--gray-800);
   --color-border-strong: var(--gray-700);
@@ -174,6 +181,8 @@
     --color-accent: var(--neon-500);
     --color-accent-strong: var(--neon-600);
     --color-on-accent: var(--ink);
+    --color-accent-glow: var(--neon-500);
+    --color-accent-sibling: var(--neon-500);
     --glow-opacity: 0.14;
     --color-border: var(--gray-800);
     --color-border-strong: var(--gray-700);
@@ -216,12 +225,44 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* The accent drifts in hue via the shared @keyframes below; each theme maps
+     that one hue motion through its own lightness band. --color-on-accent is
+     NOT set here — it carries through from the static blocks (ink in both
+     themes now; the light accent is bright enough to take dark text).
+
+     Specificity/order does the theme routing: the light `:root` (0,1,0) comes
+     first; explicit `[data-theme='dark']` (0,1,0) wins by source order; the
+     OS-dark `:root:not([data-theme])` (0,2,0) wins under a dark OS. An explicit
+     light toggle matches neither dark rule, so it stays on the green band. */
+
+  /* LIGHT — medium olive-green band (darker than the dark-mode neon; dark ink
+     on it stays AA and it still reads on the dark footer). */
   :root {
+    --color-accent: oklch(0.62 0.13 var(--accent-hue));
+    --color-accent-strong: oklch(0.56 0.13 var(--accent-hue));
+    --color-accent-glow: var(--color-accent);
+    --color-accent-sibling: oklch(0.63 0.12 calc(var(--accent-hue) + 40));
+    animation: accent-drift 32s ease-in-out infinite;
+  }
+
+  /* DARK (explicit toggle) — bright neon band. */
+  [data-theme='dark'] {
     --color-accent: oklch(0.93 0.19 var(--accent-hue));
     --color-accent-strong: oklch(0.86 0.19 var(--accent-hue));
     --color-accent-glow: var(--color-accent);
     --color-accent-sibling: oklch(0.92 0.18 calc(var(--accent-hue) + 40));
     animation: accent-drift 32s ease-in-out infinite;
+  }
+
+  /* DARK (OS preference, no explicit choice) — same bright band. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --color-accent: oklch(0.93 0.19 var(--accent-hue));
+      --color-accent-strong: oklch(0.86 0.19 var(--accent-hue));
+      --color-accent-glow: var(--color-accent);
+      --color-accent-sibling: oklch(0.92 0.18 calc(var(--accent-hue) + 40));
+      animation: accent-drift 32s ease-in-out infinite;
+    }
   }
 }
 

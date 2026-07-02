@@ -52,6 +52,25 @@ const tools = [
   { name: 'Jira', category: 'Delivery', logo: 'jira' as const },
 ];
 
+const faqs = [
+  {
+    q: 'Do you only build new design systems?',
+    a: 'No — about half of my work is on systems that already exist. Audits, token migrations, governance rescue and accessibility uplifts are just as common as greenfield builds, and usually more valuable.',
+  },
+  {
+    q: 'How does an engagement usually start?',
+    a: 'With a short, fixed-scope audit: I read the system, the codebase touchpoints and the team setup, then come back with a concrete assessment of what to systematize, what to leave alone, and what it will take. From there we decide the engagement model together.',
+  },
+  {
+    q: 'Do you work hands-on in Figma and code?',
+    a: 'Yes. I build the Figma libraries and variable structures myself, and I define tokens and component APIs together with the engineers who implement them. A system designed away from the code rarely survives contact with it.',
+  },
+  {
+    q: 'How do you measure whether a system works?',
+    a: 'Adoption, not component count: the share of product UI built from the system, contribution lead time, defect rates on themed surfaces, and how long it takes a new team to ship with it. If those numbers don’t move, the system isn’t working — however polished the library looks.',
+  },
+];
+
 // Private skills — realistic placeholders, easy to edit.
 const privateSkills = [
   { label: 'Photography', icon: 'camera' as const },
@@ -169,8 +188,45 @@ const jsonLd = JSON.stringify({
       </div>
       <SkillTags items={privateSkills} />
     </section>
+
+    <!-- FAQ -->
+    <section class="block" aria-labelledby="faq-heading">
+      <div data-reveal>
+        <h2 id="faq-heading" class="display section-title" data-reveal-item style="--index: 0">FAQ</h2>
+        <p class="section-sub" data-reveal-item style="--index: 1">
+          Common questions about how I work — and how an engagement gets started.
+        </p>
+      </div>
+      <div class="faq-list" data-reveal>
+        {
+          faqs.map((faq, i) => (
+            <details class="faq-item" data-reveal-item style={`--index: ${i}`}>
+              <summary class="faq-q">
+                <span>{faq.q}</span>
+                <span class="faq-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+                    <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </span>
+              </summary>
+              <p class="faq-a">{faq.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
   </div>
 </BaseLayout>
+
+<script>
+  // One FAQ open at a time — purely an enhancement, <details> works without it.
+  const items = document.querySelectorAll<HTMLDetailsElement>('.faq-item');
+  items.forEach((item) => {
+    item.addEventListener('toggle', () => {
+      if (item.open) items.forEach((other) => other !== item && (other.open = false));
+    });
+  });
+</script>
 
 <style>
   .intro {
@@ -259,6 +315,67 @@ const jsonLd = JSON.stringify({
     max-width: var(--measure);
     margin-block-end: var(--space-2xl);
     font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  /* FAQ */
+  .faq-list {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: 52rem;
+  }
+
+  .faq-item {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+  }
+
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 2rem;
+    block-size: 2rem;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-full);
+    transition:
+      rotate var(--duration-slow) var(--ease-out-cubic),
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  .faq-item[open] .faq-icon {
+    rotate: 45deg;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .faq-q:hover .faq-icon {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .faq-a {
+    max-width: 60ch;
+    padding: 0 var(--space-lg) var(--space-lg);
     color: var(--color-text-muted);
     text-wrap: pretty;
   }

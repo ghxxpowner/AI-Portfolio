@@ -38,10 +38,6 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
     <p class="hero-meta" data-reveal-item style="--index: 3">
       Based in Germany · Working with teams worldwide
     </p>
-    <div class="hero-actions" data-reveal-item style="--index: 4">
-      <PillButton href="mailto:hello@danielklinke.design">Let's talk</PillButton>
-      <PillButton href="/work/" variant="ghost">See the work</PillButton>
-    </div>
   </section>
 
   <section class="container work-section" id="featured" aria-labelledby="featured-heading" data-reveal>
@@ -137,15 +133,8 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
     color: var(--color-text-muted);
   }
 
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-    margin-block-start: var(--space-lg);
-  }
-
   .work-section {
-    padding-block-start: var(--space-6xl);
+    padding-block-start: var(--space-3xl);
   }
 
   /* Animated band below the work grid */

@@ -17,14 +17,30 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
 >
   <section class="hero container" data-reveal>
     <HeroMesh />
-    <h1 class="display" data-split="chars">Design systems that teams adopt</h1>
-    <div data-split="lines">
-      <p class="hero-sub">
-        I'm Daniel Klinke, product designer. I design token architectures, multi-brand component
-        libraries and the governance that keeps them alive — for products with many teams and no
-        patience for friction.
-      </p>
-      <p class="hero-meta">Based in Germany · Working with teams worldwide</p>
+    <p class="hero-eyebrow eyebrow" data-reveal-item style="--index: 0">
+      Product Designer · Design Systems
+    </p>
+    <h1 class="display hero-title" data-reveal-item style="--index: 1">
+      Hi, I'm Daniel!<br />
+      I create{' '}
+      <span class="rotator" data-rotator aria-hidden="true">
+        <span class="rotator-word is-active">Digital products</span>
+        <span class="rotator-word">Design Systems</span>
+        <span class="rotator-word">Interfaces</span>
+        <span class="rotator-word">&amp; Creative Stuff</span>
+      </span>
+      <span class="visually-hidden"> digital products.</span>
+    </h1>
+    <p class="hero-sub" data-reveal-item style="--index: 2">
+      I'm Daniel Klinke — I build the tokens, components and governance that keep multi-brand
+      products coherent.
+    </p>
+    <p class="hero-meta" data-reveal-item style="--index: 3">
+      Based in Germany · Working with teams worldwide
+    </p>
+    <div class="hero-actions" data-reveal-item style="--index: 4">
+      <PillButton href="mailto:hello@danielklinke.design">Let's talk</PillButton>
+      <PillButton href="/work/" variant="ghost">See the work</PillButton>
     </div>
   </section>
 
@@ -58,18 +74,58 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
     position: relative;
     display: grid;
     justify-items: start;
-    gap: var(--space-xl);
+    gap: var(--space-md);
     padding-block: var(--space-6xl) var(--space-4xl);
     overflow: visible;
   }
 
-  h1 {
-    max-width: 10ch;
-    font-size: var(--text-display);
+  .hero-eyebrow {
+    margin-block-end: var(--space-2xs);
+  }
+
+  .hero-title {
+    max-width: 20ch;
+    font-size: var(--text-5xl);
+    line-height: var(--leading-tight);
+  }
+
+  /* Kinetic rotating word. inline-grid stacks all words in one cell, so the box
+     sizes to the widest word and never reflows as they swap. */
+  .rotator {
+    display: inline-grid;
+    vertical-align: baseline;
+  }
+
+  .rotator-word {
+    grid-area: 1 / 1;
+    color: var(--color-accent);
+    white-space: nowrap;
+    opacity: 0;
+  }
+
+  .rotator-word.is-active {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .rotator-word {
+      translate: 0 0.35em;
+      filter: blur(6px);
+      transition:
+        opacity var(--duration-slow) var(--ease-out-cubic),
+        translate var(--duration-slow) var(--ease-out-cubic),
+        filter var(--duration-slow) var(--ease-out-cubic);
+    }
+
+    .rotator-word.is-active {
+      translate: 0 0;
+      filter: blur(0);
+    }
   }
 
   .hero-sub {
-    max-width: 52ch;
+    max-width: 46ch;
+    margin-block-start: var(--space-sm);
     font-size: var(--text-lg);
     line-height: var(--leading-snug);
     color: var(--color-text-muted);
@@ -77,9 +133,15 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
   }
 
   .hero-meta {
-    margin-block-start: var(--space-md);
     font-size: var(--text-sm);
     color: var(--color-text-muted);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-lg);
   }
 
   .work-section {

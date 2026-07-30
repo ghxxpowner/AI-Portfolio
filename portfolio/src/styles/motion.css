@@ -138,4 +138,13 @@
   ::view-transition-new(root) {
     animation: none;
   }
+
+  /* Named shared-element morphs (project card → case-study hero) come with a
+     UA group animation of their own, so `root` alone would not silence them.
+     `!important` beats both the UA sheet and the router's injected styles. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

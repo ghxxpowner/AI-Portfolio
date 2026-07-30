@@ -33,7 +33,11 @@ const meta = [
     <CaseStudyMeta items={meta} />
   </div>
 
-  <div class="cs-photo" data-reveal-item style="--index: 2">
+  {/* No `data-reveal-item` here on purpose: this element is the shared-element
+      target of the card → hero view transition, and a blur-reveal would leave
+      the morph landing on an opacity-0 box. On a direct page load the eager
+      hero image simply shows immediately, which is better for LCP anyway. */}
+  <div class="cs-photo" style={`view-transition-name: cs-${entry.id}`}>
     {
       heroImage ? (
         <Image
@@ -51,7 +55,7 @@ const meta = [
     }
   </div>
 
-  <p class="summary" data-reveal-item style="--index: 3">{summary}</p>
+  <p class="summary" data-reveal-item style="--index: 2">{summary}</p>
 </header>
 
 <style>

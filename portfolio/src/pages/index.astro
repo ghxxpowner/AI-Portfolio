@@ -104,18 +104,25 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    /* Outgoing word leaves fast and unconditionally; the incoming one waits
+       that long before starting. So only ever one word is legible — a plain
+       crossfade would show both at ~50% and read as a muddy double-exposure. */
     .rotator-word {
       translate: 0 0.35em;
       filter: blur(6px);
       transition:
-        opacity var(--duration-slow) var(--ease-out-cubic),
-        translate var(--duration-slow) var(--ease-out-cubic),
-        filter var(--duration-slow) var(--ease-out-cubic);
+        opacity var(--duration-quick) var(--ease-out-cubic),
+        translate var(--duration-quick) var(--ease-out-cubic),
+        filter var(--duration-quick) var(--ease-out-cubic);
     }
 
     .rotator-word.is-active {
       translate: 0 0;
       filter: blur(0);
+      transition:
+        opacity var(--duration-slow) var(--ease-out-cubic) var(--duration-quick),
+        translate var(--duration-slow) var(--ease-out-cubic) var(--duration-quick),
+        filter var(--duration-slow) var(--ease-out-cubic) var(--duration-quick);
     }
   }
 

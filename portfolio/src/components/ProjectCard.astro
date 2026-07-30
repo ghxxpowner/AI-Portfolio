@@ -16,7 +16,7 @@ const kind = discipline[0];
 
 <article class:list={['project-card', { 'is-featured': featured }]}>
   <a class="card-link" href={`/work/${entry.id}/`} aria-label={title}></a>
-  <div class="card-visual">
+  <div class="card-visual" style={`view-transition-name: cs-${entry.id}`}>
     {
       heroImage ? (
         <Image

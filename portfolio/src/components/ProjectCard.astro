@@ -16,7 +16,10 @@ const kind = discipline[0];
 
 <article class:list={['project-card', { 'is-featured': featured }]}>
   <a class="card-link" href={`/work/${entry.id}/`} aria-label={title}></a>
-  <div class="card-visual" style={`view-transition-name: cs-${entry.id}`}>
+  {/* The morph name is applied by view-transition-scope.ts, not here: it only
+      gets set on the one image that actually participates in a navigation, and
+      only while it is on screen. */}
+  <div class="card-visual" data-vt-name={`cs-${entry.id}`}>
     {
       heroImage ? (
         <Image

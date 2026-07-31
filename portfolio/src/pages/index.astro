@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PillButton from '../components/PillButton.astro';
 import HeroMesh from '../components/HeroMesh.astro';
-import Marquee from '../components/Marquee.astro';
 
 const featured = (await getCollection('work', ({ data }) => data.featured && !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
@@ -55,12 +54,6 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
     </div>
     <div class="work-more" data-reveal-item style={`--index: ${featured.length + 1}`}>
       <PillButton href="/work/" variant="ghost">All case studies</PillButton>
-    </div>
-  </section>
-
-  <section class="engagement-section" aria-hidden="true">
-    <div class="marquee-head">
-      <Marquee items={['Ways to work together']} size="xl" borderless />
     </div>
   </section>
 </BaseLayout>
@@ -142,15 +135,6 @@ const featured = (await getCollection('work', ({ data }) => data.featured && !da
 
   .work-section {
     padding-block-start: var(--space-3xl);
-  }
-
-  /* Animated band below the work grid */
-  .engagement-section {
-    padding-block-start: var(--space-6xl);
-  }
-
-  .marquee-head {
-    margin-block-end: var(--space-2xl);
   }
 
   .work-section .section-head {

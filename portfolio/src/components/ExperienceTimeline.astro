@@ -7,6 +7,19 @@ interface Props {
 }
 
 const { entries = experience } = Astro.props;
+
+// `start`/`end` stay machine-readable so <time datetime> is valid, while readers
+// get "Mar 2018". Formatted here rather than stored twice, so the data cannot
+// drift out of sync with its own label. A bare year (or anything unexpected) is
+// shown exactly as authored.
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function periodLabel(value: string): string {
+  const match = value.match(/^(\d{4})-(\d{2})$/);
+  if (!match) return value;
+  const month = MONTHS[Number(match[2]) - 1];
+  return month ? `${month} ${match[1]}` : value;
+}
 ---
 
 <ol class="exp-list" data-exp-timeline>
@@ -20,9 +33,15 @@ const { entries = experience } = Astro.props;
         <article class="exp-card" data-spotlight={entry.current ? '' : undefined}>
           <header class="exp-head">
             <span class="exp-period">
-              <time datetime={entry.start}>{entry.start}</time>
+              <time datetime={entry.start}>{periodLabel(entry.start)}</time>
               <span aria-hidden="true"> – </span>
-              {entry.end ? <time datetime={entry.end}>{entry.end}</time> : <span>Today</span>}
+              {
+                entry.end ? (
+                  <time datetime={entry.end}>{periodLabel(entry.end)}</time>
+                ) : (
+                  <span>Today</span>
+                )
+              }
             </span>
             <div class="exp-titleline">
               <h3 class="exp-role">{entry.role}</h3>

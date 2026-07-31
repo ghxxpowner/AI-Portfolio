@@ -9,7 +9,9 @@ import AreaList from '../components/AreaList.astro';
 import ToolGrid from '../components/ToolGrid.astro';
 import SkillTags from '../components/SkillTags.astro';
 
-// Real numbers, shared with the About page.
+// Real numbers. Also present in the archived `_about.astro` — if that page ever
+// comes back, these two lists should be extracted into src/data/ rather than
+// copied a third time.
 const bigStats = [
   { value: '10+', label: 'years in digital product design', variant: 'surface' as const },
   { value: '12', label: 'brands carried by one design system', variant: 'gradient' as const },

@@ -33,19 +33,9 @@ const { href, variant = 'neon' } = Astro.props;
     color: var(--color-on-accent);
   }
 
-  .pill-neon:hover {
-    background-color: var(--color-text);
-    color: var(--color-bg);
-  }
-
   .pill-ink {
     background-color: var(--color-text);
     color: var(--color-bg);
-  }
-
-  .pill-ink:hover {
-    background-color: var(--color-accent);
-    color: var(--color-on-accent);
   }
 
   .pill-ghost {
@@ -54,9 +44,24 @@ const { href, variant = 'neon' } = Astro.props;
     border-color: var(--color-border-strong);
   }
 
-  .pill-ghost:hover {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-on-accent);
+  /* Hover states only where a real pointer can hover. On touch and hybrid
+     devices `:hover` latches after a tap and stays until you tap elsewhere,
+     which reads as a button stuck in its hover state. */
+  @media (hover: hover) {
+    .pill-neon:hover {
+      background-color: var(--color-text);
+      color: var(--color-bg);
+    }
+
+    .pill-ink:hover {
+      background-color: var(--color-accent);
+      color: var(--color-on-accent);
+    }
+
+    .pill-ghost:hover {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-on-accent);
+    }
   }
 </style>

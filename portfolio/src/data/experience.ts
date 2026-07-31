@@ -3,11 +3,20 @@
 // Order: newest first by start date. `end` omitted → ongoing ("Today").
 // `[PLATZHALTER]` marks values still to be replaced with real copy.
 
+import type { ImageMetadata } from 'astro';
+
+// Symbol-only marks, cropped from the supplied full lockups (the originals stay
+// in the same folder). A 48px chip cannot carry a wordmark legibly.
+import jakalaLogo from '../assets/logos/jakala-mark.png';
+import ffwLogo from '../assets/logos/ffw-mark.png';
+
 export interface ExperienceEntry {
   role: string;
   company: string;
   /** Optional link for the company/client (e.g. its site or a case study). */
   companyUrl?: string;
+  /** Company logo. Without one, the monogram initial is shown instead. */
+  logo?: ImageMetadata;
   /**
    * Machine-readable `YYYY-MM` (or bare `YYYY`) — used verbatim as the
    * <time datetime> value and formatted for display, e.g. `2018-03` → "Mar 2018".
@@ -31,6 +40,7 @@ export const experience: ExperienceEntry[] = [
   {
     role: 'Product Designer',
     company: 'JAKALA',
+    logo: jakalaLogo,
     start: '2024-11',
     current: true,
     summary: '[PLATZHALTER] — 1–2 Sätze zu dieser Rolle.',
@@ -43,6 +53,7 @@ export const experience: ExperienceEntry[] = [
   {
     role: 'Junior Product Designer',
     company: 'FFW/JAKALA',
+    logo: ffwLogo,
     start: '2023-01',
     end: '2024-11',
     summary: '[PLATZHALTER] — 1–2 Sätze zu dieser Rolle.',

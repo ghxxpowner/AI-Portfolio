@@ -109,16 +109,18 @@ const jsonLd = JSON.stringify({
     <header class="intro" data-reveal>
       <GlowBlob size="40rem" top="-18rem" left="-14rem" />
       <div class="intro-text">
-        <p class="eyebrow" data-reveal-item style="--index: 0">Product Designer · Design Systems</p>
+        {/* The bio below now carries role, employer and focus, so the eyebrow
+            would have repeated it almost verbatim two lines up. It takes the
+            location instead — the one fact the shortened bio would otherwise drop. */}
+        <p class="eyebrow" data-reveal-item style="--index: 0">
+          Based in Germany · Working with teams worldwide
+        </p>
         <h1 class="display" data-split="chars">Daniel Klinke</h1>
         <div class="intro-bio flow" data-split="lines">
           <p>
-            I design the tokens, components, documentation and governance that let many teams ship
-            one coherent product — and I care most about whether those systems actually get adopted.
-          </p>
-          <p>
-            Based in Germany, working with teams worldwide. Below: how I got here, what I'm deep in,
-            and a little of who I am away from the canvas.
+            Product Designer at JAKALA, focused on design systems. I build the tokens, components
+            and governance that let many teams ship one coherent product — from web to mobile to
+            smart TV.
           </p>
         </div>
         <div class="intro-actions" data-reveal-item style="--index: 4">

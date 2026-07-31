@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { experience, type ExperienceEntry } from '../data/experience';
 
 interface Props {
@@ -48,7 +49,17 @@ function periodLabel(value: string): string {
               {entry.current && <span class="exp-now">Now</span>}
             </div>
             <div class="exp-org">
-              <span class="exp-logo" aria-hidden="true">{initial}</span>
+              {/* `height` only, so the aspect ratio is preserved; 96px is 2x the
+                  48px chip and stays crisp without upscaling either mark. */}
+              <span class:list={['exp-logo', { 'has-logo': entry.logo }]} aria-hidden="true">
+                {
+                  entry.logo ? (
+                    <Image src={entry.logo} alt="" height={96} loading="lazy" decoding="async" />
+                  ) : (
+                    initial
+                  )
+                }
+              </span>
               <span class="exp-company">
                 {entry.companyUrl ? (
                   <a href={entry.companyUrl}>{entry.company}</a>
@@ -238,7 +249,7 @@ function periodLabel(value: string): string {
     color: var(--color-text-muted);
   }
 
-  /* Circular logo placeholder (monogram). Swap for a real logo later. */
+  /* Monogram fallback for entries without a logo file. */
   .exp-logo {
     display: grid;
     place-items: center;
@@ -251,6 +262,26 @@ function periodLabel(value: string): string {
     background-color: var(--color-bg-subtle);
     border: var(--border-hairline);
     border-radius: var(--radius-md);
+  }
+
+  /* Real logos sit on a fixed light chip in BOTH themes: brand marks are not
+     theme-aware, and several (e.g. a near-black wordmark) would disappear on the
+     dark surface. `contain` keeps wide lockups and square symbols undistorted. */
+  .exp-logo.has-logo {
+    padding: 0.3rem;
+    background-color: var(--color-logo-surface);
+    /* Definite track. Without this the auto-sized grid track grows to the image's
+       intrinsic height, and the image's own `max-block-size: 100%` then resolves
+       against that grown track instead of the chip — so it never clamps. */
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  }
+
+  .exp-logo.has-logo :global(img) {
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    inline-size: auto;
+    block-size: auto;
+    object-fit: contain;
   }
 
   /* Smaller than the role above it. */

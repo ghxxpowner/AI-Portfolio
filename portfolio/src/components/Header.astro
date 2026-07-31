@@ -131,9 +131,12 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       color var(--duration-quick) var(--ease-out-cubic);
   }
 
-  .header-cta:hover {
-    background-color: var(--color-text);
-    color: var(--color-bg);
+  /* Same reasoning as PillButton: no latched hover on touch devices. */
+  @media (hover: hover) {
+    .header-cta:hover {
+      background-color: var(--color-text);
+      color: var(--color-bg);
+    }
   }
 
   @media (max-width: 36rem) {

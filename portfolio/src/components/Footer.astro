@@ -62,14 +62,18 @@ const topics = ['Design systems', 'Token architecture', 'Multi-brand theming', '
     border-color: var(--color-inverse-border);
   }
 
-  .cta-actions :global(.pill-ghost:hover) {
-    color: var(--color-on-accent);
-    border-color: var(--color-accent);
-  }
+  /* Guarded to match PillButton — leaving these unguarded would produce a half
+     hover state on touch (accent border, but no accent background). */
+  @media (hover: hover) {
+    .cta-actions :global(.pill-ghost:hover) {
+      color: var(--color-on-accent);
+      border-color: var(--color-accent);
+    }
 
-  .cta-actions :global(.pill-neon:hover) {
-    background-color: var(--color-inverse-text);
-    color: var(--color-inverse-bg);
+    .cta-actions :global(.pill-neon:hover) {
+      background-color: var(--color-inverse-text);
+      color: var(--color-inverse-bg);
+    }
   }
 
   .meta {

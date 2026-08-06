@@ -1,6 +1,9 @@
 ---
 interface Props {
-  caption: string;
+  /** Optional. Captions are visually hidden but still read by assistive tech,
+      so omit it rather than ship a placeholder — the image's alt carries the
+      description. */
+  caption?: string;
   fullWidth?: boolean;
 }
 
@@ -11,7 +14,7 @@ const { caption, fullWidth = false } = Astro.props;
   <div class="figure-frame">
     <slot />
   </div>
-  <figcaption>{caption}</figcaption>
+  {caption && <figcaption>{caption}</figcaption>}
 </figure>
 
 <style>

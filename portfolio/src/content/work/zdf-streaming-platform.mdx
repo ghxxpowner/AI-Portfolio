@@ -27,20 +27,13 @@ import { Image } from 'astro:assets';
 import Figure from '../../components/Figure.astro';
 import MultiDeviceShowcase from '../../components/MultiDeviceShowcase.astro';
 import PhoneScene from '../../components/PhoneScene.astro';
+import PlatformCarousel from '../../components/PlatformCarousel.astro';
 
-import imgWebHome from '../../assets/work/zdf-streaming-platform/web-home.png';
-import imgWebSeries from '../../assets/work/zdf-streaming-platform/web-series.png';
-import imgWebCategory from '../../assets/work/zdf-streaming-platform/web-category.png';
-import imgWebLive from '../../assets/work/zdf-streaming-platform/web-live.png';
-import imgWebEpg from '../../assets/work/zdf-streaming-platform/web-epg.png';
-import imgWebPlayerSport from '../../assets/work/zdf-streaming-platform/web-player-sport.png';
-import imgTvHome from '../../assets/work/zdf-streaming-platform/tv-home.png';
-import imgTvSeries from '../../assets/work/zdf-streaming-platform/tv-series.png';
-import imgTvCategory from '../../assets/work/zdf-streaming-platform/tv-category.png';
-import imgTvPlayerNews from '../../assets/work/zdf-streaming-platform/tv-player-news.png';
-import imgMobileSeries from '../../assets/work/zdf-streaming-platform/mobile-series.png';
-import imgMobileDoku from '../../assets/work/zdf-streaming-platform/mobile-doku.png';
-import imgMobileLive from '../../assets/work/zdf-streaming-platform/mobile-live.png';
+import shot01 from '../../assets/work/zdf-streaming-platform/showcase/01.png';
+import shot02 from '../../assets/work/zdf-streaming-platform/showcase/02.png';
+import shot03 from '../../assets/work/zdf-streaming-platform/showcase/03.png';
+import shot04 from '../../assets/work/zdf-streaming-platform/showcase/04.png';
+import shot05 from '../../assets/work/zdf-streaming-platform/showcase/05.png';
 
 ## About the project
 
@@ -52,80 +45,26 @@ import imgMobileLive from '../../assets/work/zdf-streaming-platform/mobile-live.
 
 <MultiDeviceShowcase caption="[PLATZHALTER]" />
 
-## Home & discovery
+<PlatformCarousel />
 
-[PLATZHALTER]
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgWebHome} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
+<Figure fullWidth>
+  <Image src={shot01} alt="Three phone screens showing the ZDF home carousel with the featured shows Mai Think, Always Hamburg and ZDF Magazin Royale." widths={[800, 1400, 2000]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
 </Figure>
 
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgTvHome} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
+<Figure fullWidth>
+  <Image src={shot02} alt="Three phone screens of the series page for The Rookie — the Episodes, Recommendations and Extras tabs." widths={[800, 1400, 2000]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
 </Figure>
 
-## The series page
-
-[PLATZHALTER]
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgWebSeries} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
+<Figure fullWidth>
+  <Image src={shot03} alt="The Always Hamburg documentary page shown side by side on web and on a phone." widths={[800, 1400, 2000]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
 </Figure>
 
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgTvSeries} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
+<Figure fullWidth>
+  <Image src={shot04} alt="Three phone screens: the live TV player, the Dokus collection, and the personal Mein ZDF area." widths={[800, 1400, 2000]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
 </Figure>
 
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgMobileSeries} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
+<Figure fullWidth>
+  <Image src={shot05} alt="The TV guide grid with a programme running live, next to the live player in landscape." widths={[800, 1400, 2000]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
 </Figure>
 
-## On the small screen
-
-[PLATZHALTER]
-
-<PhoneScene caption="[PLATZHALTER]" />
-
-## Browsing categories
-
-[PLATZHALTER]
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgWebCategory} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgTvCategory} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgMobileDoku} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
-
-## Live & TV
-
-[PLATZHALTER]
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgWebLive} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgWebEpg} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgMobileLive} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
-
-## The player
-
-[PLATZHALTER]
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgWebPlayerSport} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
-
-<Figure caption="[PLATZHALTER]" fullWidth>
-  <Image src={imgTvPlayerNews} alt="[PLATZHALTER]" widths={[700, 1200, 1600]} sizes="(max-width: 80rem) 100vw, 75rem" decoding="async" />
-</Figure>
+<PhoneScene />

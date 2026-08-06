@@ -1,0 +1,347 @@
+---
+import { Image } from 'astro:assets';
+import { platformViews } from '../data/platform-screens';
+
+// Chip-driven platform switcher: the same home screen on all six platforms.
+//
+// Deliberately JS-FREE. A native radio group already provides everything a
+// hand-built tablist would need scripting for: exactly one selection, arrow-key
+// navigation, a single tab stop, focus handling and the "1 of 6" announcement —
+// and it keeps working with no JavaScript at all. Switching is pure CSS via
+// `:has()` (already used in motion.css).
+//
+// Inactive panels use `display: none` on purpose: stacking them with opacity
+// would let all nine images load at once, because a hidden-but-laid-out image
+// still counts as in-viewport and `loading="lazy"` stops deferring. Weight wins
+// over a crossfade here — and an instant swap is the clearer interaction for a
+// comparison tool anyway. Only the default panel loads eagerly.
+//
+// Scene proportions are measured from showcase/03.png, which this mirrors:
+// large screen ~65% wide on the left, phone ~27% wide overlapping its right
+// edge, inset vertically, stacked in front.
+
+interface Props {
+  /** Platform id that starts selected. */
+  initial?: string;
+}
+const { initial = 'web' } = Astro.props;
+
+// Tuned per layer against the stage, which is at most the 75rem prose column:
+// the large screen renders at 75% of it (~56rem), the phone at 23% (~17rem).
+// The phone sources are only 766px wide, so nothing above that is offered.
+const WIDE_WIDTHS = [600, 900, 1400, 1800];
+const WIDE_SIZES = '(min-width: 64rem) 56rem, 75vw';
+const PHONE_WIDTHS = [280, 560, 766];
+const PHONE_SIZES = '(min-width: 64rem) 17rem, 23vw';
+---
+
+{/* `data-dir` decides which side a new panel enters from. It defaults to
+    "forward", so with no JavaScript the crossfade still runs — just always from
+    the same side. The script below flips it to match the direction actually
+    travelled through the chips. `data-index` seeds the comparison. */}
+<div class="pc full-width" data-dir="forward" data-index={platformViews.findIndex((v) => v.id === initial)}>
+  <fieldset class="pc-chips">
+    <legend class="visually-hidden">Choose a platform</legend>
+    {
+      platformViews.map((view) => (
+        <Fragment>
+          <input
+            class="pc-radio visually-hidden"
+            type="radio"
+            name="pc-platform"
+            id={`pc-${view.id}`}
+            value={view.id}
+            checked={view.id === initial}
+          />
+          <label class="pc-chip" for={`pc-${view.id}`}>{view.label}</label>
+        </Fragment>
+      ))
+    }
+  </fieldset>
+
+  <div class="pc-stage">
+    {
+      platformViews.map((view) => (
+        <div class="pc-panel" data-platform={view.id}>
+          <div class="pc-scene">
+            <div class="pc-layer pc-wide">
+              <Image
+                src={view.wide}
+                alt={view.phone ? '' : view.alt}
+                widths={WIDE_WIDTHS}
+                sizes={WIDE_SIZES}
+                loading={view.id === initial ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </div>
+            {view.phone && (
+              <div class="pc-layer pc-phone">
+                {/* One alt for the whole scene sits on the phone layer, since the
+                    two images are a single composition, not two facts. */}
+                <Image
+                  src={view.phone}
+                  alt={view.alt}
+                  widths={PHONE_WIDTHS}
+                  sizes={PHONE_SIZES}
+                  loading={view.id === initial ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  // Sole job: remember which chip was active so the next panel can enter from
+  // the side you came from. Everything else — the switch itself and the fade —
+  // is CSS, so without this the carousel still works and still crossfades.
+  //
+  // Delegated on `document`: the router renders fresh markup on every
+  // navigation, but `document` persists, so this never needs re-binding.
+  document.addEventListener('change', (event) => {
+    const input = (event.target as HTMLElement)?.closest?.('.pc-radio');
+    if (!input) return;
+    const root = input.closest<HTMLElement>('.pc');
+    if (!root) return;
+
+    const radios = Array.from(root.querySelectorAll('.pc-radio'));
+    const next = radios.indexOf(input);
+    const previous = Number(root.dataset.index ?? next);
+
+    root.dataset.dir = next < previous ? 'back' : 'forward';
+    root.dataset.index = String(next);
+  });
+</script>
+
+<style>
+  /* Full-bleed below 64rem like the hero image, then back to the same width as
+     the other showcase figures from desktop up — which is simply the prose
+     column, so the breakout is undone rather than re-measured. */
+  .pc {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    inline-size: 100vw;
+    --flow-space: var(--space-xl);
+  }
+
+  @media (min-width: 64rem) {
+    .pc {
+      left: auto;
+      transform: none;
+      inline-size: auto;
+    }
+  }
+
+  /* Chip row */
+  .pc-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin: 0 0 var(--space-md);
+    padding: 0 var(--gutter);
+    border: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .pc-chips {
+      padding-inline: 0;
+    }
+  }
+
+  /* The radio stays focusable — `display: none` would drop it out of the tab
+     order and kill arrow-key navigation. */
+  .pc-chip {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--text-sm);
+    font-weight: 550;
+    color: var(--color-text-muted);
+    background-color: transparent;
+    border: var(--border-hairline);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+      color var(--duration-quick) var(--ease-out-cubic),
+      background-color var(--duration-quick) var(--ease-out-cubic),
+      border-color var(--duration-quick) var(--ease-out-cubic);
+  }
+
+  /* Hover only where a real pointer can hover — on touch `:hover` latches after
+     a tap and would read as selected alongside the actually-selected chip. */
+  @media (hover: hover) {
+    .pc-chip:hover {
+      color: var(--color-text);
+      background-color: var(--color-bg-subtle);
+    }
+  }
+
+  .pc-radio:checked + .pc-chip {
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .pc-radio:focus-visible + .pc-chip {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  /* Slightly grey highlighted frame. `--color-bg-subtle` is one step off the page
+     in both themes; `--color-surface` would be pure white in light mode and read
+     as a card. Note this deliberately is NOT `.figure-frame`, whose background is
+     overridden to --color-bg on this case study. */
+  .pc-stage {
+    position: relative;
+    /* Fixed frame: every platform occupies the same box, so switching never
+       shifts the page. 16/9 is as tight as it goes — the three TV screens are
+       exactly 16:9 and fill it edge to edge, so nothing can be trimmed further
+       without shrinking them. The Android tablet is scaled down below (it is the
+       only platform that would otherwise force a taller frame and leave grey
+       around everything else). */
+    aspect-ratio: 16 / 9;
+    background-color: var(--color-bg-subtle);
+    border-block: var(--border-hairline);
+  }
+
+  @media (min-width: 64rem) {
+    .pc-stage {
+      border: var(--border-hairline);
+      border-radius: var(--radius-2xl);
+    }
+  }
+
+  .pc-panel {
+    display: none;
+    position: absolute;
+    inset: 0;
+    padding: var(--space-md);
+  }
+
+  /* Crossfade with a directional entrance. `allow-discrete` lets `display`
+     participate, so the outgoing panel stays painted while it fades and only
+     then flips to none — which keeps the lazy-loading benefit of display:none
+     intact. Where either feature is missing the swap is simply instant. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (transition-behavior: allow-discrete) and (selector(:has(*))) {
+      .pc {
+        --enter-x: 1.5rem;
+      }
+
+      .pc[data-dir='back'] {
+        --enter-x: -1.5rem;
+      }
+
+      /* The two halves are SEQUENCED, not crossfaded: the outgoing screen is
+         fully gone before the incoming one starts. The entrance simply waits
+         out the exit via a matching transition-delay, so the two are never on
+         screen together. */
+
+      /* EXIT lives on the panel, because only the panel can carry `display`.
+         The active rule that sets `opacity: 1` contains an id via
+         `:has(#pc-…:checked)`, so it far outweighs any generic rule — which is
+         exactly why the entrance is NOT defined here. */
+      .pc-panel {
+        opacity: 0;
+        transition:
+          opacity var(--duration-quick) var(--ease-out-cubic),
+          display var(--duration-quick) allow-discrete;
+      }
+
+      /* ENTER lives on the scene. It only becomes rendered once its panel flips
+         to `display: block`, so @starting-style applies to it — and nothing
+         else targets it, so the starting values actually win. Keeping it here
+         also means new platforms need no extra selectors.
+         The delay equals the exit duration, which is what removes the overlap. */
+      .pc-scene {
+        opacity: 1;
+        translate: 0 0;
+        transition:
+          opacity var(--duration-slow) var(--ease-out-cubic) var(--duration-quick),
+          translate var(--duration-slow) var(--ease-out-cubic) var(--duration-quick);
+      }
+
+      @starting-style {
+        .pc-scene {
+          opacity: 0;
+          translate: var(--enter-x) 0;
+        }
+      }
+    }
+  }
+
+  /* The only switching logic in the component. */
+  .pc:has(#pc-web:checked) .pc-panel[data-platform='web'],
+  .pc:has(#pc-android:checked) .pc-panel[data-platform='android'],
+  .pc:has(#pc-ios:checked) .pc-panel[data-platform='ios'],
+  .pc:has(#pc-android-tv:checked) .pc-panel[data-platform='android-tv'],
+  .pc:has(#pc-tvos:checked) .pc-panel[data-platform='tvos'],
+  .pc:has(#pc-hbbtv:checked) .pc-panel[data-platform='hbbtv'] {
+    display: block;
+    opacity: 1;
+  }
+
+  /* The composition is driven by three numbers so the phone always sits on the
+     large screen's right edge, whatever width that screen has. The pair is then
+     centred as a unit, so a narrower platform stays balanced instead of drifting
+     left. */
+  .pc-scene {
+    --wide-w: 75%;
+    --phone-w: 23%;
+    --overlap: 5%;
+    --comp-w: calc(var(--wide-w) + var(--phone-w) - var(--overlap));
+    --comp-x: calc((100% - var(--comp-w)) / 2);
+
+    position: relative;
+    block-size: 100%;
+  }
+
+  /* The Android tablet is the squarest screen (1.18) and would need a taller
+     frame than every other platform. Scaled down so 16/9 fits it too. */
+  .pc-panel[data-platform='android'] .pc-scene {
+    --wide-w: 66%;
+  }
+
+  .pc-layer {
+    position: absolute;
+    inset-block: 0;
+  }
+
+  /* `contain` centres each screen vertically inside the full-height layer, which
+     is what gives the phone its natural inset — no extra offsets needed. */
+  .pc-layer :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+  }
+
+  .pc-wide {
+    inset-inline-start: var(--comp-x);
+    inline-size: var(--wide-w);
+    z-index: 1;
+  }
+
+  /* Second plane: overlaps the large screen and casts a shadow onto it. The
+     phone PNGs carry an alpha channel, so drop-shadow follows the device
+     silhouette instead of boxing it. */
+  .pc-phone {
+    inset-inline-start: calc(var(--comp-x) + var(--wide-w) - var(--overlap));
+    inline-size: var(--phone-w);
+    z-index: 2;
+    filter:
+      drop-shadow(0 0.25rem 0.5rem rgb(0 0 0 / 0.28))
+      drop-shadow(0 1.25rem 2rem rgb(0 0 0 / 0.35));
+  }
+
+  /* Single-screen (TV) platforms have no second plane and fill the frame. */
+  .pc-scene:not(:has(.pc-phone)) {
+    --wide-w: 100%;
+    --phone-w: 0%;
+    --overlap: 0%;
+  }
+</style>

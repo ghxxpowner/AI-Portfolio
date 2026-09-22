@@ -81,4 +81,16 @@ const { entry, prev, next } = Astro.props;
   .case-study--zdf-streaming-platform :global(.figure-frame) {
     background-color: var(--color-bg);
   }
+
+  /* zdf-streaming-platform only: this study is carried by its imagery, so its
+     media get twice the vertical rhythm. Each media component sets
+     `--flow-space: var(--space-xl)` itself; `.prose` is in the selector purely
+     to outrank those component rules regardless of stylesheet order. Prose
+     spacing is untouched — only the gaps around images change. */
+  .case-study--zdf-streaming-platform :global(.prose .figure),
+  .case-study--zdf-streaming-platform :global(.prose .mds),
+  .case-study--zdf-streaming-platform :global(.prose .ps),
+  .case-study--zdf-streaming-platform :global(.prose .pc) {
+    --flow-space: calc(var(--space-xl) * 2);
+  }
 </style>

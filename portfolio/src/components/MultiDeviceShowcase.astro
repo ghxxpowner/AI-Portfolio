@@ -73,7 +73,10 @@ const { caption } = Astro.props;
 <style>
   .mds {
     --flow-space: var(--space-xl);
-    margin: 0;
+    /* Only the UA figure indent is reset — a blanket `margin: 0` would also wipe
+       the block margin that `.flow` sets from --flow-space, leaving the figure
+       flush against the paragraph above it. */
+    margin-inline: 0;
   }
 
   /* The scene keeps the original composite's aspect, so it scales as one banner

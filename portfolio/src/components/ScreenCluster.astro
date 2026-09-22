@@ -1,0 +1,199 @@
+---
+import { Image } from 'astro:assets';
+import { phoneScreens } from '../data/phone-screens';
+
+// A horizontal, scroll-pinned 3D carousel: the section pins while the user
+// scrolls vertically past it, and that scroll drives the row horizontally.
+// The item nearest the centre reads as closest to the viewer (full size, no
+// rotation); items further out shrink, rotate away and recede — a real
+// perspective/rotateY/translateZ carousel, not a faked scale-only effect.
+//
+// One inherited number drives the whole formation: `--cluster-progress`
+// (registered below so the timeline can interpolate it smoothly) counts in
+// "item units" — 0 means item 0 is centred, 1 means item 1 is centred, etc.
+// Each item reads its own `--item-index` (inline, same convention as
+// MultiDeviceShowcase's per-layer `--amp`) and derives its own depth from the
+// distance between the two — so the whole row updates in lock-step from a
+// single driver, exactly like a real rotating carousel.
+//
+// Motion contract: the base row (no JS, reduced motion, or below the desktop
+// breakpoint) is a plain, fully-scrollable horizontal strip — nothing is ever
+// hidden or blocked. The pin + 3D choreography is an enhancement layered on
+// top only when motion is welcome AND there's room for it (≥64rem).
+
+const ITEM_COUNT = phoneScreens.length;
+
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+---
+
+<figure class="sc full-width" style={`--item-count: ${ITEM_COUNT};`}>
+  <div class="sc-wrapper" data-screen-cluster>
+    <div class="sc-viewport">
+      <ul class="sc-track" role="list">
+        {
+          phoneScreens.map((screen, i) => (
+            <li class="sc-item" style={`--item-index: ${i};`}>
+              <Image
+                src={screen.image}
+                alt={screen.alt}
+                widths={[375, 750]}
+                sizes="(min-width: 64rem) 18rem, 60vw"
+                loading="lazy"
+                decoding="async"
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  /* Component-local plumbing, not a design value — kept out of tokens.css on
+     purpose (see MultiDeviceShowcase/PhoneScene precedent for --amp-style
+     per-instance geometry living beside the component that uses it). */
+  @property --cluster-progress {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .sc {
+    --flow-space: calc(var(--space-xl) * 2);
+    margin-inline: 0;
+  }
+
+  .sc-wrapper {
+    --item-w: min(75vw, 20rem);
+    --item-gap: var(--space-lg);
+    --item-advance: calc(var(--item-w) + var(--item-gap));
+    --cluster-progress: 0;
+  }
+
+  /* Base = a plain, fully scrollable horizontal strip. This is what reduced
+     motion, no-JS, unsupported browsers, and narrow viewports get — nothing
+     is ever hidden or blocked, just presented as a normal swipeable row. */
+  .sc-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    padding-block: var(--space-sm);
+  }
+
+  .sc-track {
+    display: flex;
+    gap: var(--item-gap);
+    padding-inline: var(--gutter);
+    list-style: none;
+    margin: 0;
+  }
+
+  .sc-item {
+    flex-shrink: 0;
+    inline-size: var(--item-w);
+    scroll-snap-align: center;
+  }
+
+  .sc-item :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--radius-lg);
+  }
+
+  .sc figcaption {
+    margin-block-start: var(--space-sm);
+    padding-inline: var(--gutter);
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Pin + 3D carousel — only when motion is welcome, there's room, AND
+     JavaScript actually ran (`html.js`, set by reveal.ts). That last part
+     matters here specifically: `animation-timeline: view()` is native CSS and
+     needs no script to run, so without the `html.js` gate a no-JS visitor on a
+     browser that lacks view()-timeline support would still get the sticky
+     pin + frozen 3D pose (nothing driving it) instead of the plain row — a
+     stuck-looking section, not a working fallback. Gating structure on
+     `html.js` (not just the animation) keeps the no-JS case identical to the
+     reduced-motion case: the plain scrollable row, full stop. */
+  @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+    :global(html.js) .sc-wrapper {
+      /* Pin distance: 100vh for the sticky viewport itself, plus one
+         --item-advance per remaining item (0.85x so pacing feels brisk, not
+         padded). --item-count is data-driven (phoneScreens.length), not a
+         magic number. */
+      height: calc(100vh + (var(--item-count) - 1) * var(--item-advance) * 0.85);
+    }
+
+    :global(html.js) .sc-viewport {
+      position: sticky;
+      inset-block-start: 0;
+      overflow: clip;
+      block-size: 100vh;
+      display: flex;
+      align-items: center;
+      perspective: 1600px;
+      perspective-origin: 50% 50%;
+      padding-block: 0;
+    }
+
+    :global(html.js) .sc-track {
+      /* Centres item 0 and the last item on the same track positions every
+         other item passes through. */
+      padding-inline: calc(50vw - var(--item-w) / 2);
+      /* Position lives in `translate`; each item's 3D pose lives in its own
+         `transform` below — same separation ScreenGallery's static tilt uses,
+         so the two motions never fight. */
+      translate: calc(var(--cluster-progress) * var(--item-advance) * -1) 0;
+    }
+
+    :global(html.js) .sc-item {
+      scroll-snap-align: none;
+      --raw: calc(var(--cluster-progress) - var(--item-index));
+      --dist: min(abs(var(--raw)), 1.6);
+      transform: translateZ(calc(var(--dist) * -120px)) rotateY(calc(var(--raw) * -14deg))
+        scale(calc(1 - var(--dist) * 0.3));
+      opacity: calc(1 - var(--dist) * 0.35);
+    }
+
+    /* Preferred: JS-free, scroll-linked progress. `contain` is the named
+       range that spans exactly the "stuck" phase — from the moment the
+       viewport is fully inside this element's box to the moment it no longer
+       is, which is geometrically identical to the sticky pin window. */
+    @supports (animation-timeline: view()) {
+      :global(html.js) .sc-wrapper {
+        view-timeline-name: --sc-tl;
+        view-timeline-axis: block;
+      }
+
+      :global(html.js) .sc-viewport {
+        animation: sc-progress linear both;
+        animation-timeline: --sc-tl;
+        animation-range: contain;
+      }
+    }
+
+    /* Fallback path: screen-cluster.ts writes --cluster-progress. */
+    @supports not (animation-timeline: view()) {
+      :global(html.js) .sc-viewport {
+        --cluster-progress: var(--sc-shift, 0);
+      }
+    }
+  }
+
+  @keyframes sc-progress {
+    from {
+      --cluster-progress: 0;
+    }
+    to {
+      --cluster-progress: calc(var(--item-count) - 1);
+    }
+  }
+</style>
